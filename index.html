@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forjo Studio · Soluciones digitales para profesionales</title>
+<meta name="description" content="Webs, turnos online, gestión de pagos y paneles de administración para profesionales y negocios. Soluciones a medida, sin complicaciones.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,900&family=Spline+Sans+Mono:wght@400;500;600&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #111009;
+  --bg2: #191510;
+  --ember: #e07c30;
+  --ember-lite: #f0a060;
+  --ember-glow: rgba(224,124,48,.2);
+  --ember-glow2: rgba(224,124,48,.08);
+  --steel: #7aaabb;
+  --ink: #f5ede0;
+  --ink-soft: #b8a898;
+  --ink-faint: #6a5e50;
+  --line: #2c2419;
+  --line2: #3a2e20;
+  --card: #161210;
+  --good: #7ab87a;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Sora', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: .025;
+}
+
+/* ── GLOW BG ── */
+.glow-1 {
+  position: fixed; top: -200px; left: -100px; width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(224,124,48,.12) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.glow-2 {
+  position: fixed; bottom: -200px; right: -100px; width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(122,170,187,.07) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 5vw, 64px); height: 68px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(17,16,9,.88);
+  backdrop-filter: blur(20px);
+}
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Fraunces', serif; font-weight: 600; font-size: 19px;
+}
+.logo-mark {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(140deg, var(--ember), #a04e18);
+  display: grid; place-items: center;
+  box-shadow: 0 4px 18px var(--ember-glow);
+}
+.logo-mark span { font-weight: 900; font-size: 20px; color: #1a0e06; line-height: 1; }
+.logo-sub { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-family: 'Spline Sans Mono', monospace; color: var(--ink-faint); display: block; margin-top: 1px; }
+.nav-right { display: flex; align-items: center; gap: 24px; }
+.nav-link { font-size: 14px; color: var(--ink-soft); transition: color .2s; }
+.nav-link:hover { color: var(--ink); }
+.nav-cta {
+  font-size: 14px; font-weight: 600;
+  background: var(--ember); color: #1a0e06;
+  padding: 9px 22px; border-radius: 10px;
+  box-shadow: 0 4px 18px var(--ember-glow);
+  transition: background .2s, transform .15s;
+}
+.nav-cta:hover { background: var(--ember-lite); transform: translateY(-1px); }
+@media (max-width: 600px) { .nav-link { display: none; } }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  padding: clamp(64px, 10vw, 120px) clamp(20px, 5vw, 64px) clamp(48px, 8vw, 96px);
+  max-width: 1200px; margin: 0 auto;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Spline Sans Mono', monospace; font-size: 12px; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ember); border: 1px solid rgba(224,124,48,.3);
+  padding: 6px 16px; border-radius: 100px;
+  background: var(--ember-glow2); margin-bottom: 32px;
+  opacity: 0; animation: fadeUp .6s ease .1s forwards;
+}
+.hero-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--ember); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.hero-headline {
+  font-family: 'Fraunces', serif; font-weight: 900;
+  font-size: clamp(52px, 8vw, 110px);
+  line-height: .95; letter-spacing: -3px;
+  margin-bottom: 32px;
+  opacity: 0; animation: fadeUp .7s ease .2s forwards;
+}
+.hero-headline em { font-style: italic; color: var(--ember); }
+.hero-headline .line2 { color: var(--ink-soft); font-weight: 300; }
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 20px); color: var(--ink-soft); line-height: 1.6;
+  max-width: 52ch; margin-bottom: 40px;
+  opacity: 0; animation: fadeUp .7s ease .35s forwards;
+}
+.hero-sub strong { color: var(--ink); font-weight: 500; }
+
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp .7s ease .45s forwards;
+}
+.btn-main {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ember); color: #1a0e06;
+  font-weight: 700; font-size: 16px; padding: 15px 32px;
+  border-radius: 14px; border: none; cursor: pointer;
+  box-shadow: 0 8px 32px var(--ember-glow);
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.btn-main:hover { background: var(--ember-lite); transform: translateY(-2px); box-shadow: 0 12px 40px var(--ember-glow); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: 1px solid var(--line2);
+  color: var(--ink-soft); font-size: 16px; padding: 15px 28px;
+  border-radius: 14px; cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.btn-outline:hover { border-color: var(--ember); color: var(--ember); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* hero deco number */
+.hero-deco {
+  position: absolute; right: clamp(20px, 5vw, 64px); top: clamp(64px, 10vw, 120px);
+  font-family: 'Fraunces', serif; font-size: clamp(120px, 18vw, 240px);
+  font-weight: 900; color: transparent;
+  -webkit-text-stroke: 1px var(--line2);
+  line-height: 1; pointer-events: none; user-select: none;
+  opacity: 0; animation: fadeUp .9s ease .5s forwards;
+}
+@media (max-width: 800px) { .hero-deco { display: none; } }
+
+/* ── MARQUEE ── */
+.marquee-wrap {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  overflow: hidden; padding: 18px 0;
+  background: var(--bg2);
+}
+.marquee-track {
+  display: flex; gap: 0;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.marquee-item {
+  display: flex; align-items: center; gap: 20px;
+  padding: 0 32px; white-space: nowrap;
+  font-family: 'Spline Sans Mono', monospace; font-size: 13px;
+  color: var(--ink-faint); letter-spacing: 1px; text-transform: uppercase;
+}
+.marquee-item::after {
+  content: "✦"; color: var(--ember); font-size: 10px;
+}
+
+/* ── SERVICIOS ── */
+.section { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: clamp(64px, 8vw, 120px) clamp(20px, 5vw, 64px); }
+.section-label {
+  font-family: 'Spline Sans Mono', monospace; font-size: 11px;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--ember);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Fraunces', serif; font-weight: 900;
+  font-size: clamp(36px, 5vw, 62px); line-height: 1.0; letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+.section-title em { font-style: italic; color: var(--ink-soft); font-weight: 300; }
+.section-desc { color: var(--ink-soft); font-size: 17px; max-width: 50ch; margin-bottom: 56px; line-height: 1.65; }
+
+.serv-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+@media (max-width: 700px) { .serv-grid { grid-template-columns: 1fr; } }
+
+.serv-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 20px; padding: 36px 32px;
+  position: relative; overflow: hidden;
+  transition: border-color .3s, transform .3s;
+}
+.serv-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: 20px;
+  background: linear-gradient(140deg, var(--ember-glow2), transparent 60%);
+  opacity: 0; transition: opacity .3s;
+}
+.serv-card:hover { border-color: var(--line2); transform: translateY(-4px); }
+.serv-card:hover::before { opacity: 1; }
+.serv-card.featured { border-color: rgba(224,124,48,.3); grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+.serv-card.featured::before { opacity: 1; }
+@media (max-width: 700px) { .serv-card.featured { grid-column: span 1; grid-template-columns: 1fr; } }
+
+.serv-num {
+  font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600;
+  color: var(--ember); margin-bottom: 24px;
+  font-style: italic;
+}
+.serv-icon { font-size: 36px; margin-bottom: 20px; }
+.serv-card h3 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; letter-spacing: -.5px; margin-bottom: 12px; }
+.serv-card p { color: var(--ink-soft); font-size: 15px; line-height: 1.65; }
+.serv-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.serv-tag {
+  font-family: 'Spline Sans Mono', monospace; font-size: 11px; font-weight: 500;
+  letter-spacing: .5px; padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--line2); color: var(--ink-soft);
+}
+.serv-visual {
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 14px; padding: 24px;
+}
+.mini-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px;
+}
+.mini-row:last-child { border-bottom: none; }
+.mini-label { color: var(--ink-soft); }
+.mini-val { font-family: 'Spline Sans Mono', monospace; color: var(--ink); }
+.mini-val.up { color: var(--good); }
+.mini-val.em { color: var(--ember); }
+
+/* ── CÓMO FUNCIONA ── */
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 0; }
+@media (max-width: 700px) { .how-grid { grid-template-columns: 1fr; } }
+.how-step {
+  padding: 40px 32px; border: 1px solid var(--line);
+  position: relative;
+}
+.how-step:first-child { border-radius: 20px 0 0 20px; }
+.how-step:last-child { border-radius: 0 20px 20px 0; }
+@media (max-width: 700px) {
+  .how-step:first-child { border-radius: 20px 20px 0 0; }
+  .how-step:last-child { border-radius: 0 0 20px 20px; }
+}
+.how-num {
+  font-family: 'Fraunces', serif; font-size: 72px; font-weight: 900;
+  color: transparent; -webkit-text-stroke: 1px var(--line2);
+  line-height: 1; margin-bottom: 20px;
+}
+.how-step h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.how-step p { color: var(--ink-soft); font-size: 14px; line-height: 1.65; }
+
+/* ── NÚMEROS ── */
+.nums-strip {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--bg2);
+}
+@media (max-width: 600px) { .nums-strip { grid-template-columns: 1fr; } }
+.num-block {
+  padding: 48px 40px; text-align: center;
+  border-right: 1px solid var(--line);
+}
+.num-block:last-child { border-right: none; }
+.num-val {
+  font-family: 'Fraunces', serif; font-size: 56px; font-weight: 900;
+  color: var(--ember); line-height: 1;
+}
+.num-lab { color: var(--ink-soft); font-size: 14px; margin-top: 8px; }
+
+/* ── PARA QUIÉN ── */
+.for-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+.for-pill {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 20px 22px; display: flex; align-items: center; gap: 12px;
+  font-size: 15px; font-weight: 500;
+  transition: border-color .2s, transform .2s;
+}
+.for-pill:hover { border-color: var(--line2); transform: translateY(-2px); }
+.for-pill span { font-size: 22px; }
+
+/* ── CTA FINAL ── */
+.cta-block {
+  position: relative; z-index: 1;
+  margin: 0 clamp(20px, 5vw, 64px) 96px;
+  background: linear-gradient(140deg, var(--bg2), #1e1509);
+  border: 1px solid rgba(224,124,48,.25);
+  border-radius: 28px; padding: clamp(48px, 7vw, 96px) clamp(32px, 5vw, 80px);
+  text-align: center;
+  overflow: hidden;
+}
+.cta-block::before {
+  content: ""; position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(224,124,48,.15), transparent 70%);
+  pointer-events: none;
+}
+.cta-block h2 {
+  font-family: 'Fraunces', serif; font-weight: 900; font-style: italic;
+  font-size: clamp(38px, 6vw, 72px); line-height: 1.0; letter-spacing: -2px;
+  margin-bottom: 20px; position: relative;
+}
+.cta-block p { color: var(--ink-soft); font-size: 18px; max-width: 44ch; margin: 0 auto 40px; line-height: 1.6; }
+.cta-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.wsp-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #25d366; color: #000;
+  font-weight: 700; font-size: 16px; padding: 15px 32px;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(37,211,102,.25);
+  transition: transform .15s, box-shadow .2s;
+}
+.wsp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(37,211,102,.35); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--line);
+  padding: 32px clamp(20px, 5vw, 64px);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.foot-left { font-size: 14px; color: var(--ink-faint); }
+.foot-left strong { color: var(--ink-soft); }
+.foot-links { display: flex; gap: 24px; }
+.foot-links a { font-size: 13px; color: var(--ink-faint); transition: color .2s; }
+.foot-links a:hover { color: var(--ember); }
+</style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-mark"><span>F</span></div>
+    <div>
+      Forjo
+      <span class="logo-sub">Studio</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="#servicios">Servicios</a>
+    <a class="nav-link" href="#como">Cómo funciona</a>
+    <a class="nav-link" href="#para-quien">Para quién</a>
+    <a class="nav-cta" href="#contacto">Hablar con nosotros</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="position:relative;z-index:1;">
+  <div class="hero">
+    <div class="hero-tag">Soluciones digitales a medida</div>
+    <h1 class="hero-headline">
+      Tu negocio,<br>
+      <em>en línea</em><br>
+      <span class="line2">y funcionando.</span>
+    </h1>
+    <p class="hero-sub">
+      Construimos la herramienta digital que tu negocio necesita.<br>
+      <strong>Turnos, pagos, finanzas, pacientes.</strong> Todo en un solo lugar, listo para usar.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-main" href="#contacto">
+        Quiero mi solución →
+      </a>
+      <a class="btn-outline" href="#servicios">Ver servicios</a>
+    </div>
+    <div class="hero-deco">01</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Médicos</div>
+    <div class="marquee-item">Psicólogos</div>
+    <div class="marquee-item">Nutricionistas</div>
+    <div class="marquee-item">Estudios contables</div>
+    <div class="marquee-item">Peluquerías</div>
+    <div class="marquee-item">Estudios jurídicos</div>
+    <div class="marquee-item">Gimnasios</div>
+    <div class="marquee-item">Odontólogos</div>
+    <div class="marquee-item">Kinesiólogos</div>
+    <div class="marquee-item">Talleres</div>
+    <div class="marquee-item">Clínicas</div>
+    <div class="marquee-item">Arquitectos</div>
+    <div class="marquee-item">Médicos</div>
+    <div class="marquee-item">Psicólogos</div>
+    <div class="marquee-item">Nutricionistas</div>
+    <div class="marquee-item">Estudios contables</div>
+    <div class="marquee-item">Peluquerías</div>
+    <div class="marquee-item">Estudios jurídicos</div>
+    <div class="marquee-item">Gimnasios</div>
+    <div class="marquee-item">Odontólogos</div>
+    <div class="marquee-item">Kinesiólogos</div>
+    <div class="marquee-item">Talleres</div>
+    <div class="marquee-item">Clínicas</div>
+    <div class="marquee-item">Arquitectos</div>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<div class="section" id="servicios">
+  <div class="section-label">Lo que construimos</div>
+  <h2 class="section-title">Soluciones que <em>trabajan</em><br>mientras vos dormís.</h2>
+  <p class="section-desc">Nada de hojas de cálculo ni grupos de WhatsApp. Cada solución está pensada para ahorrarte tiempo real desde el día uno.</p>
+
+  <div class="serv-grid">
+
+    <div class="serv-card featured">
+      <div>
+        <div class="serv-num">Nro. 01</div>
+        <div class="serv-icon">📅</div>
+        <h3>Sistema de turnos online</h3>
+        <p>Tus clientes reservan solos, eligen el día y horario, y reciben la confirmación al instante. Vos recibís la agenda lista, sin responder mensajes ni llamadas. Con panel de administración incluido para ver, modificar y cancelar turnos desde cualquier dispositivo.</p>
+        <div class="serv-tags">
+          <span class="serv-tag">Reservas 24/7</span>
+          <span class="serv-tag">Confirmación automática</span>
+          <span class="serv-tag">Panel de admin</span>
+          <span class="serv-tag">Recordatorios</span>
+        </div>
+      </div>
+      <div class="serv-visual">
+        <div style="font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-faint);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px">Agenda de hoy</div>
+        <div class="mini-row"><span class="mini-label">09:00 · Laura M.</span><span class="mini-val em">Confirmada</span></div>
+        <div class="mini-row"><span class="mini-label">10:30 · Carlos R.</span><span class="mini-val em">Confirmada</span></div>
+        <div class="mini-row"><span class="mini-label">12:00 · Ana G.</span><span class="mini-val" style="color:var(--ink-faint)">Pendiente</span></div>
+        <div class="mini-row"><span class="mini-label">16:00 · Martín S.</span><span class="mini-val em">Confirmada</span></div>
+        <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;color:var(--ink-faint)">Ingresos proyectados</span>
+          <span style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--good)">$84.000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="serv-card">
+      <div class="serv-num">Nro. 02</div>
+      <div class="serv-icon">💳</div>
+      <h3>Gestión de pagos</h3>
+      <p>Llevá el control de lo que entra y lo que falta cobrar. Integramos métodos de pago, registramos cada transacción y te mostramos un resumen claro en tiempo real.</p>
+      <div class="serv-tags">
+        <span class="serv-tag">Cobro online</span>
+        <span class="serv-tag">Historial de pagos</span>
+        <span class="serv-tag">Alertas de deuda</span>
+      </div>
+    </div>
+
+    <div class="serv-card">
+      <div class="serv-num">Nro. 03</div>
+      <div class="serv-icon">📊</div>
+      <h3>Control de finanzas</h3>
+      <p>Ingresos, egresos, meses comparados. Tu negocio en números, sin necesitar a un contador para entender cómo estás. Dashboard claro, exportable, siempre actualizado.</p>
+      <div class="serv-tags">
+        <span class="serv-tag">Dashboard en tiempo real</span>
+        <span class="serv-tag">Reportes mensuales</span>
+        <span class="serv-tag">Exportable</span>
+      </div>
+    </div>
+
+    <div class="serv-card">
+      <div class="serv-num">Nro. 04</div>
+      <div class="serv-icon">🗂️</div>
+      <h3>Fichas y gestión de clientes</h3>
+      <p>Historial de cada paciente o cliente, notas, archivos adjuntos y seguimiento. Toda la información en un lugar seguro, accesible desde cualquier dispositivo.</p>
+      <div class="serv-tags">
+        <span class="serv-tag">Historial completo</span>
+        <span class="serv-tag">Archivos adjuntos</span>
+        <span class="serv-tag">Búsqueda rápida</span>
+      </div>
+    </div>
+
+    <div class="serv-card">
+      <div class="serv-num">Nro. 05</div>
+      <div class="serv-icon">🌐</div>
+      <h3>Páginas web profesionales</h3>
+      <p>Tu presencia online bien hecha. Rápida, bonita y con tu dominio propio. Ideal para profesionales que necesitan mostrar lo que hacen y recibir consultas sin depender de las redes.</p>
+      <div class="serv-tags">
+        <span class="serv-tag">Dominio propio</span>
+        <span class="serv-tag">Diseño a medida</span>
+        <span class="serv-tag">Formulario de contacto</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- NÚMEROS -->
+<div class="nums-strip">
+  <div class="num-block">
+    <div class="num-val">72 hs</div>
+    <div class="num-lab">Tiempo promedio de entrega</div>
+  </div>
+  <div class="num-block">
+    <div class="num-val">100%</div>
+    <div class="num-lab">Soluciones a medida, sin plantillas genéricas</div>
+  </div>
+  <div class="num-block">
+    <div class="num-val">∞</div>
+    <div class="num-lab">Soporte post-entrega incluido</div>
+  </div>
+</div>
+
+<!-- CÓMO FUNCIONA -->
+<div class="section" id="como">
+  <div class="section-label">El proceso</div>
+  <h2 class="section-title">Simple.<br><em>Sin vueltas.</em></h2>
+  <p class="section-desc" style="margin-bottom:40px">Sin reuniones interminables. Sin tecnicismos. Contás qué necesitás y nosotros lo construimos.</p>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <h3>Nos contás</h3>
+      <p>Un mensaje por WhatsApp alcanza. Describís tu negocio, qué querés resolver y cómo lo usarías. Nosotros hacemos las preguntas necesarias.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <h3>Armamos tu solución</h3>
+      <p>Diseñamos y desarrollamos tu herramienta. Podés ver el avance en tiempo real y proponer cambios antes del lanzamiento.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <h3>Salís online</h3>
+      <p>Tu solución queda publicada con tu dominio propio. Te entregamos el acceso y te explicamos cómo usarla. El soporte no termina ahí.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PARA QUIÉN -->
+<div class="section" id="para-quien" style="padding-top:0">
+  <div class="section-label">Clientes</div>
+  <h2 class="section-title">Para el que <em>laburó</em><br>toda su vida construyendo.</h2>
+  <p class="section-desc">Si manejás un negocio o ejercés tu profesión de manera independiente, esto es para vos.</p>
+  <div class="for-grid">
+    <div class="for-pill"><span>🩺</span> Médicos</div>
+    <div class="for-pill"><span>🧠</span> Psicólogos</div>
+    <div class="for-pill"><span>🥗</span> Nutricionistas</div>
+    <div class="for-pill"><span>🦷</span> Odontólogos</div>
+    <div class="for-pill"><span>🏋️</span> Gimnasios</div>
+    <div class="for-pill"><span>✂️</span> Peluquerías</div>
+    <div class="for-pill"><span>⚖️</span> Abogados</div>
+    <div class="for-pill"><span>📐</span> Arquitectos</div>
+    <div class="for-pill"><span>📋</span> Contadores</div>
+    <div class="for-pill"><span>🔧</span> Talleres</div>
+    <div class="for-pill"><span>💆</span> Kinesiólogos</div>
+    <div class="for-pill"><span>➕</span> Y más...</div>
+  </div>
+</div>
+
+<!-- CTA FINAL -->
+<div class="cta-block" id="contacto">
+  <h2>¿Listo para dejar de<br>perder tiempo?</h2>
+  <p>Contanos qué necesitás. Sin compromiso, sin formularios largos. Un mensaje y arrancamos.</p>
+  <div class="cta-actions">
+    <a class="wsp-btn" href="https://wa.me/5491100000000?text=Hola%20Forjo%2C%20quiero%20saber%20m%C3%A1s%20sobre%20sus%20servicios" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escribinos por WhatsApp
+    </a>
+    <a class="btn-outline" href="mailto:hola@forjo.studio">hola@forjo.studio</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-left">
+    <strong>Forjo Studio</strong> · hola@forjo.studio
+  </div>
+  <div class="foot-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#como">Proceso</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+</footer>
+
+<script>
+  // Actualizar número de WhatsApp
+  // Reemplazá 5491100000000 con tu número real: 549 + código de área + número
+</script>
+</body>
+</html>
