@@ -805,6 +805,26 @@ footer {
   .plans-grid { grid-template-columns: 1fr; }
 }
 
+/* ================================================================
+   WHATSAPP FLOAT
+================================================================ */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+  transition: transform 0.2s ease;
+}
+.wa-float:hover { transform: scale(1.08); }
+
 </style>
 </head>
 <body>
@@ -1041,48 +1061,43 @@ footer {
 
   <div class="work-grid">
 
-    <a href="https://jjotalab.com" target="_blank" rel="noopener" class="work-card">
-      <div class="work-thumb">
-        <div class="work-thumb-bg"></div>
-        <div class="work-thumb-color" style="background: #d94a2b;"></div>
-        <div class="work-thumb-label">jjotalab.com</div>
+    <div class="work-card">
+      <div class="work-thumb" style="background-image: url('jjotalab.png'); background-size: cover; background-position: top center;">
+        <div class="work-thumb-bg" style="display: none;"></div>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name">Jotalab</div>
+          <div class="work-name">JOTALAB</div>
           <div class="work-cat">Sistema de turnos y gestión integral</div>
         </div>
         <div class="work-year">2025</div>
       </div>
-      <p style="font-family: var(--font-body); font-size: 14px; color: var(--muted); margin-top: 10px; line-height: 1.5;">Centro de cejas y pestañas en Zárate. Landing page, reserva online con MercadoPago y panel de administración completo.</p>
-      <span style="display: inline-block; margin-top: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px;">Ver demo →</span>
-    </a>
+      <a href="https://jjotalab.com" target="_blank" rel="noopener" class="work-all-link" style="display: inline-block; margin-top: 12px;">Ver demo →</a>
+    </div>
 
     <div class="work-card work-card--placeholder">
-      <div class="work-thumb">
-        <div class="work-thumb-bg"></div>
-        <div class="work-thumb-placeholder">Próximamente</div>
+      <div class="work-thumb" style="background: #1a1714; display: flex; align-items: center; justify-content: center;">
+        <span style="font-family: var(--font-mono); font-size: 13px; color: #a39989;">¿El próximo?</span>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name" style="opacity: 0.35;">Tu negocio acá</div>
-          <div class="work-cat">—</div>
+          <div class="work-name" style="opacity: 0.35;">TU NEGOCIO</div>
+          <div class="work-cat">Próximamente</div>
         </div>
-        <div class="work-year" style="opacity: 0.35;">2025</div>
+        <div class="work-year">—</div>
       </div>
     </div>
 
     <div class="work-card work-card--placeholder">
-      <div class="work-thumb">
-        <div class="work-thumb-bg"></div>
-        <div class="work-thumb-placeholder">Próximamente</div>
+      <div class="work-thumb" style="background: #1a1714; display: flex; align-items: center; justify-content: center;">
+        <span style="font-family: var(--font-mono); font-size: 13px; color: #a39989;">¿El próximo?</span>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name" style="opacity: 0.35;">Tu negocio acá</div>
-          <div class="work-cat">—</div>
+          <div class="work-name" style="opacity: 0.35;">TU NEGOCIO</div>
+          <div class="work-cat">Próximamente</div>
         </div>
-        <div class="work-year" style="opacity: 0.35;">2025</div>
+        <div class="work-year">—</div>
       </div>
     </div>
 
@@ -1191,6 +1206,7 @@ footer {
     <div class="footer-col">
       <div class="footer-col-title">Contacto</div>
       <a href="mailto:hola@forjo.studio">hola@forjo.studio</a>
+      <!-- TODO: reemplazar con número real de Forjo -->
       <a href="https://wa.me/5491100000000" target="_blank">WhatsApp</a>
       <a href="#">Instagram</a>
       <a href="#">LinkedIn</a>
@@ -1202,6 +1218,14 @@ footer {
     <span>v1.0 · forjo.studio</span>
   </div>
 </footer>
+
+<!-- TODO: reemplazar número -->
+<a href="https://wa.me/5491100000000" target="_blank" rel="noopener" class="wa-float" aria-label="Contactar por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.555 4.122 1.524 5.855L.054 23.454a.5.5 0 0 0 .492.596l5.809-1.522A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.87 9.87 0 0 1-5.031-1.378l-.36-.214-3.733.979.995-3.636-.235-.374A9.865 9.865 0 0 1 2.118 12C2.118 6.533 6.533 2.118 12 2.118S21.882 6.533 21.882 12 17.467 21.882 12 21.882z"/>
+  </svg>
+</a>
 
 <script>
   // Actualizar número de WhatsApp: reemplazá 5491100000000 con 549 + código de área + número
