@@ -725,6 +725,24 @@ footer {
   font-family: var(--font-body);
   color: var(--muted);
 }
+.plan-setup {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: -4px;
+}
+.plan-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 4px 8px;
+  align-self: flex-start;
+}
 .plan-features {
   list-style: none;
   display: flex;
@@ -901,32 +919,47 @@ footer {
         <div class="plan-card">
           <div class="plan-name">Básico</div>
           <div class="plan-price">U$D 12<span>/mes</span></div>
+          <div class="plan-setup">+ U$D 30 setup único</div>
+          <div class="plan-badge">1er mes gratis</div>
           <ul class="plan-features">
             <li>1 profesional</li>
             <li>1 sucursal</li>
             <li>Dominio bajo forjo.studio incluido</li>
+            <li>Dominio propio disponible como add-on</li>
+            <li>Soporte WhatsApp · respuesta en 24hs</li>
+            <li>2 modificaciones por mes</li>
+            <li>Onboarding incluido</li>
           </ul>
         </div>
         <div class="plan-card plan-card--featured">
           <div class="plan-name">Estudio</div>
-          <div class="plan-price">U$D 20<span>/mes</span></div>
+          <div class="plan-price">U$D 25<span>/mes</span></div>
+          <div class="plan-setup">+ U$D 50 setup único</div>
+          <div class="plan-badge">1er mes gratis</div>
           <ul class="plan-features">
             <li>Hasta 5 profesionales</li>
-            <li>3 sucursales</li>
-            <li>Opción de dominio propio</li>
+            <li>Hasta 3 sucursales</li>
+            <li>Dominio propio opcional</li>
+            <li>Soporte WhatsApp · respuesta en 12hs</li>
+            <li>4 modificaciones por mes</li>
+            <li>Onboarding incluido</li>
           </ul>
         </div>
         <div class="plan-card">
           <div class="plan-name">Pro</div>
-          <div class="plan-price">U$D 35<span>/mes</span></div>
+          <div class="plan-price">U$D 40<span>/mes</span></div>
+          <div class="plan-setup">Setup incluido</div>
+          <div class="plan-badge">1er mes gratis</div>
           <ul class="plan-features">
             <li>Hasta 15 profesionales</li>
-            <li>10 sucursales</li>
+            <li>Hasta 10 sucursales</li>
             <li>Dominio propio incluido</li>
+            <li>Soporte WhatsApp · respuesta en 12hs</li>
+            <li>8 modificaciones por mes</li>
+            <li>Onboarding incluido</li>
           </ul>
         </div>
       </div>
-      <p class="plan-addon">Add-on: dominio propio en plan Básico +U$D 8/mes</p>
     </div>
 
     <div class="serv-card" style="border-right: 1px solid var(--border); border-bottom: none;">
@@ -940,7 +973,8 @@ footer {
         <span class="serv-tag">Formulario de contacto</span>
         <span class="serv-tag">Mobile-first</span>
       </div>
-      <div class="serv-price">desde U$D 150 <span>pago único</span></div>
+      <div class="serv-price" style="margin-bottom: 20px;">desde U$D 100 <span>· precio según proyecto</span></div>
+      <a class="btn btn--sm" href="#contacto">Cotizar →</a>
     </div>
 
     <div class="serv-card" style="border-right: none; border-bottom: none;">
