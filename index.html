@@ -686,6 +686,107 @@ footer {
   .work-header { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
 
+/* ================================================================
+   PLANS (dentro de servicios)
+================================================================ */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.plan-card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plan-card--featured { border-color: var(--accent); }
+.plan-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.plan-card--featured .plan-name { color: var(--accent); }
+.plan-price {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+}
+.plan-price span {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--font-body);
+  color: var(--muted);
+}
+.plan-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.plan-features li {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  padding-left: 14px;
+  position: relative;
+}
+.plan-features li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+.plan-addon {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.serv-price {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.serv-price span {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: var(--font-body);
+  color: var(--muted);
+}
+
+/* Work cards placeholder */
+.work-card--placeholder { cursor: default; }
+.work-card--placeholder .work-thumb { opacity: 0.35; }
+.work-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  .plans-grid { grid-template-columns: 1fr; }
+}
+
 </style>
 </head>
 <body>
@@ -721,7 +822,7 @@ footer {
         que <em>convierten</em>.
       </h1>
       <p class="hero-sub">
-        Diseño y desarrollo a medida para emprendedores, profesionales y marcas que necesitan más que un template.
+        Construimos el sistema de turnos que necesita tu negocio, la web que te representa, o el software que nadie más tiene. A medida, sin vueltas.
       </p>
       <div class="hero-actions">
         <a class="btn btn--primary" href="#contacto">Empecemos un proyecto →</a>
@@ -778,80 +879,82 @@ footer {
       <h2 class="title" style="font-size: clamp(40px, 4vw, 56px); margin-top: 16px;">Lo que forjamos.</h2>
     </div>
     <p class="section-header-right">
-      Cinco líneas de trabajo, todas a medida. Cada proyecto arranca con una conversación sobre qué necesitás, qué no, y cuál es la forma más simple de llegar.
+      Tres servicios, todos a medida. Cada proyecto arranca con una conversación sobre qué necesitás, qué no, y cuál es la forma más simple de llegar.
     </p>
   </div>
 
   <div class="services-grid">
 
-    <div class="serv-card">
-      <div class="serv-index">01 / 05</div>
-      <h3 class="title serv-title">Sitios institucionales</h3>
-      <p class="serv-desc">Tu marca con presencia profesional. Para estudios, consultoras, agencias y profesionales independientes.</p>
-      <div class="serv-tags">
+    <div class="serv-card" style="grid-column: 1 / -1; border-right: none; border-bottom: 1px solid var(--border);">
+      <div class="serv-index">01 / 03 · Producto principal</div>
+      <h3 class="title serv-title">Sistema de turnos<br>y gestión integral</h3>
+      <p class="serv-desc">Un sistema completo bajo tu dominio o el nuestro. Tus clientes reservan online, vos gestionás todo desde un panel de administración: turnos, clientes, finanzas y profesionales.</p>
+      <div class="serv-tags" style="margin-bottom: 32px;">
+        <span class="serv-tag">Reservas online</span>
+        <span class="serv-tag">Panel de admin</span>
+        <span class="serv-tag">Gestión de clientes</span>
+        <span class="serv-tag">Control de finanzas</span>
+        <span class="serv-tag">MercadoPago</span>
+        <span class="serv-tag">Multi-profesional</span>
+      </div>
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-name">Básico</div>
+          <div class="plan-price">U$D 12<span>/mes</span></div>
+          <ul class="plan-features">
+            <li>1 profesional</li>
+            <li>1 sucursal</li>
+            <li>Dominio bajo forjo.studio incluido</li>
+          </ul>
+        </div>
+        <div class="plan-card plan-card--featured">
+          <div class="plan-name">Estudio</div>
+          <div class="plan-price">U$D 20<span>/mes</span></div>
+          <ul class="plan-features">
+            <li>Hasta 5 profesionales</li>
+            <li>3 sucursales</li>
+            <li>Opción de dominio propio</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">U$D 35<span>/mes</span></div>
+          <ul class="plan-features">
+            <li>Hasta 15 profesionales</li>
+            <li>10 sucursales</li>
+            <li>Dominio propio incluido</li>
+          </ul>
+        </div>
+      </div>
+      <p class="plan-addon">Add-on: dominio propio en plan Básico +U$D 8/mes</p>
+    </div>
+
+    <div class="serv-card" style="border-right: 1px solid var(--border); border-bottom: none;">
+      <div class="serv-index">02 / 03</div>
+      <h3 class="title serv-title">Sitios web profesionales</h3>
+      <p class="serv-desc">Presencia online a medida para emprendedores, profesionales e influencers. Sin sistema de turnos, solo tu web.</p>
+      <div class="serv-tags" style="margin-bottom: 24px;">
         <span class="serv-tag">Diseño a medida</span>
-        <span class="serv-tag">CMS editable</span>
-        <span class="serv-tag">SEO básico</span>
+        <span class="serv-tag">Dominio propio</span>
         <span class="serv-tag">Hosting incluido</span>
+        <span class="serv-tag">Formulario de contacto</span>
+        <span class="serv-tag">Mobile-first</span>
       </div>
+      <div class="serv-price">desde U$D 150 <span>pago único</span></div>
     </div>
 
-    <div class="serv-card">
-      <div class="serv-index">02 / 05</div>
-      <h3 class="title serv-title">Optimizaciones SEO</h3>
-      <p class="serv-desc">Que Google te encuentre y que tus visitas se vuelvan clientes. SEO técnico, contenido y performance.</p>
-      <div class="serv-tags">
-        <span class="serv-tag">Auditoría técnica</span>
-        <span class="serv-tag">Core Web Vitals</span>
-        <span class="serv-tag">Schema + metas</span>
-        <span class="serv-tag">Contenido orientado</span>
-      </div>
-    </div>
-
-    <div class="serv-card">
-      <div class="serv-index">03 / 05</div>
-      <h3 class="title serv-title">Landing pages</h3>
-      <p class="serv-desc">Páginas pensadas para convertir: lanzamientos, campañas, captación de leads.</p>
-      <div class="serv-tags">
-        <span class="serv-tag">Copy persuasivo</span>
-        <span class="serv-tag">A/B testing</span>
-        <span class="serv-tag">Analytics</span>
-        <span class="serv-tag">Integración con CRM</span>
-      </div>
-    </div>
-
-    <div class="serv-card">
-      <div class="serv-index">04 / 05</div>
+    <div class="serv-card" style="border-right: none; border-bottom: none;">
+      <div class="serv-index">03 / 03</div>
       <h3 class="title serv-title">Software a medida</h3>
-      <p class="serv-desc">Aplicaciones web internas para gestionar tu negocio: dashboards, CRMs, herramientas operativas.</p>
-      <div class="serv-tags">
+      <p class="serv-desc">Si lo que necesitás no entra en un molde, lo construimos desde cero. Dashboards, CRMs, herramientas internas, integraciones.</p>
+      <div class="serv-tags" style="margin-bottom: 24px;">
         <span class="serv-tag">React + Node</span>
         <span class="serv-tag">Base de datos</span>
         <span class="serv-tag">Autenticación</span>
         <span class="serv-tag">API integraciones</span>
       </div>
+      <div class="serv-price">Cotización según proyecto</div>
     </div>
-
-    <div class="serv-card" style="border-right: 1px solid var(--border); border-bottom: none;">
-      <div class="serv-index">05 / 05</div>
-      <h3 class="title serv-title">Auditoría de negocios</h3>
-      <p class="serv-desc">Diagnóstico digital de tu negocio: qué funciona, qué se rompe, qué oportunidad estás dejando pasar.</p>
-      <div class="serv-tags">
-        <span class="serv-tag">Análisis web + UX</span>
-        <span class="serv-tag">Funnel de conversión</span>
-        <span class="serv-tag">Stack tecnológico</span>
-        <span class="serv-tag">Roadmap accionable</span>
-      </div>
-    </div>
-
-    <a href="#contacto" class="serv-cta">
-      <div class="serv-cta-index">◇ / 05+</div>
-      <div>
-        <h3 class="title serv-cta-title">¿Algo más?</h3>
-        <p class="serv-cta-desc">Si lo que necesitás no está acá, igual contanos. Probablemente lo podamos hacer.</p>
-        <span class="serv-cta-link">Hablemos →</span>
-      </div>
-    </a>
 
   </div>
 </section>
@@ -904,48 +1007,48 @@ footer {
 
   <div class="work-grid">
 
-    <div class="work-card">
+    <a href="https://jjotalab.com" target="_blank" rel="noopener" class="work-card">
       <div class="work-thumb">
         <div class="work-thumb-bg"></div>
         <div class="work-thumb-color" style="background: #d94a2b;"></div>
-        <div class="work-thumb-label">&lt;screenshot del proyecto&gt;</div>
+        <div class="work-thumb-label">jjotalab.com</div>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name">Estudio Norte</div>
-          <div class="work-cat">Sitio institucional</div>
+          <div class="work-name">Jotalab</div>
+          <div class="work-cat">Sistema de turnos y gestión integral</div>
         </div>
         <div class="work-year">2025</div>
       </div>
-    </div>
+      <p style="font-family: var(--font-body); font-size: 14px; color: var(--muted); margin-top: 10px; line-height: 1.5;">Centro de cejas y pestañas en Zárate. Landing page, reserva online con MercadoPago y panel de administración completo.</p>
+      <span style="display: inline-block; margin-top: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 2px;">Ver demo →</span>
+    </a>
 
-    <div class="work-card">
+    <div class="work-card work-card--placeholder">
       <div class="work-thumb">
         <div class="work-thumb-bg"></div>
-        <div class="work-thumb-color" style="background: #2a5fa5;"></div>
-        <div class="work-thumb-label">&lt;screenshot del proyecto&gt;</div>
+        <div class="work-thumb-placeholder">Próximamente</div>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name">Mendoza Vinos</div>
-          <div class="work-cat">Auditoría + SEO</div>
+          <div class="work-name" style="opacity: 0.35;">Tu negocio acá</div>
+          <div class="work-cat">—</div>
         </div>
-        <div class="work-year">2025</div>
+        <div class="work-year" style="opacity: 0.35;">2025</div>
       </div>
     </div>
 
-    <div class="work-card">
+    <div class="work-card work-card--placeholder">
       <div class="work-thumb">
         <div class="work-thumb-bg"></div>
-        <div class="work-thumb-color" style="background: #1d6c4f;"></div>
-        <div class="work-thumb-label">&lt;screenshot del proyecto&gt;</div>
+        <div class="work-thumb-placeholder">Próximamente</div>
       </div>
       <div class="work-meta">
         <div>
-          <div class="work-name">Mercado Andino</div>
-          <div class="work-cat">Software interno</div>
+          <div class="work-name" style="opacity: 0.35;">Tu negocio acá</div>
+          <div class="work-cat">—</div>
         </div>
-        <div class="work-year">2024</div>
+        <div class="work-year" style="opacity: 0.35;">2025</div>
       </div>
     </div>
 
@@ -971,20 +1074,20 @@ footer {
 
     <div class="stats-list">
       <div class="stat-row">
-        <div class="stat-key">24</div>
-        <div class="stat-val">proyectos lanzados</div>
+        <div class="stat-key">1</div>
+        <div class="stat-val">primer producto lanzado</div>
       </div>
       <div class="stat-row">
         <div class="stat-key">100%</div>
-        <div class="stat-val">código propio · sin templates</div>
+        <div class="stat-val">código propio, sin templates</div>
       </div>
       <div class="stat-row">
-        <div class="stat-key">2–6</div>
-        <div class="stat-val">semanas por proyecto</div>
+        <div class="stat-key">72 hs</div>
+        <div class="stat-val">tiempo promedio de entrega de landing</div>
       </div>
       <div class="stat-row">
         <div class="stat-key">1</div>
-        <div class="stat-val">punto de contacto · sin pelota a otra área</div>
+        <div class="stat-val">punto de contacto, siempre hablás con quien construye</div>
       </div>
     </div>
   </div>
@@ -1007,8 +1110,9 @@ footer {
       <div class="contact-box-label">◇ contacto directo</div>
       <div class="contact-links">
         <a href="mailto:hola@forjo.studio" class="contact-email">hola@forjo.studio</a>
+        <!-- TODO: reemplazar con número real -->
         <a href="https://wa.me/5491100000000?text=Hola%20Forjo%2C%20quiero%20saber%20más%20sobre%20sus%20servicios" target="_blank" class="contact-link-row">
-          WhatsApp · +54 11 ????-???? →
+          WhatsApp · +54 11 0000-0000 →
         </a>
         <a href="#" class="contact-link-row">
           Agendar una llamada →
