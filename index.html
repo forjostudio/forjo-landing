@@ -637,6 +637,9 @@ footer {
   text-transform: uppercase;
   color: rgba(243, 234, 216, 0.5);
 }
+.footer-legal { display: flex; gap: 24px; }
+.footer-legal a { color: rgba(243, 234, 216, 0.5); transition: color 0.15s; }
+.footer-legal a:hover { color: var(--cream); }
 
 /* ================================================================
    RESPONSIVE
@@ -1223,6 +1226,10 @@ footer {
 
   <div class="footer-bottom">
     <span>© 2026 Forjo Studio · todos los derechos reservados</span>
+    <div class="footer-legal">
+      <a href="privacidad.html">Privacidad</a>
+      <a href="terminos.html">Términos</a>
+    </div>
     <span>v1.0 · forjo.studio</span>
   </div>
 </footer>

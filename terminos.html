@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Términos de Servicio — Forjo Studio</title>
+<meta name="description" content="Términos de Servicio de Forjo Gestión: condiciones de uso del software de gestión de turnos de Forjo Studio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #1a1714;
+  --surface: #252019;
+  --ink:     #f3ead8;
+  --muted:   #a39989;
+  --border:  #332d24;
+  --cream:   #f3ead8;
+  --accent:  #d94a2b;
+
+  --font-display: 'Archivo', sans-serif;
+  --font-body:    'Space Grotesk', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+  --font-serif:   'Fraunces', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: var(--accent); color: var(--cream); }
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 56px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(26, 23, 20, 0.92);
+  backdrop-filter: blur(8px);
+}
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ink);
+}
+.logo-text span { font-weight: 400; opacity: 0.55; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.nav-links a:not(.btn) { color: var(--ink); opacity: 0.75; transition: opacity 0.15s; }
+.nav-links a:not(.btn):hover { opacity: 1; text-decoration: none; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  transition: transform 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); text-decoration: none; }
+
+/* ── CONTENT ── */
+.wrap { max-width: 820px; margin: 0 auto; padding: 56px 24px 96px; }
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.doc-header { border-bottom: 1px solid var(--border); padding-bottom: 28px; margin-bottom: 40px; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin: 12px 0 10px;
+}
+.meta { color: var(--muted); font-size: 14px; font-family: var(--font-mono); letter-spacing: 0.04em; }
+h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  margin: 44px 0 12px;
+}
+p, li { color: #ddd2bf; }
+p { margin: 12px 0; }
+strong { color: var(--ink); font-weight: 600; }
+ul { padding-left: 20px; margin: 12px 0; }
+li { margin: 6px 0; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: var(--muted); }
+.footer-links a:hover { color: var(--ink); text-decoration: none; }
+
+@media (max-width: 640px) {
+  nav { padding: 18px 20px; }
+  .nav-links { gap: 18px; }
+  footer { padding: 32px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo" aria-label="Forjo Studio — inicio">
+    <svg width="28" height="35" viewBox="0 0 64 80" aria-hidden="true">
+      <rect x="6" y="6" width="14" height="68" fill="#f3ead8"/>
+      <rect x="20" y="6" width="38" height="14" fill="#d94a2b"/>
+      <path d="M 20 34 L 50 34 L 36 48 L 20 48 Z" fill="#7aa6d6"/>
+      <circle cx="58" cy="13" r="5" fill="#f4c543"/>
+    </svg>
+    <span class="logo-text">forjo <span>/ studio</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#servicios">Servicios</a>
+    <a href="index.html#proceso">Proceso</a>
+    <a class="btn" href="index.html#contacto">Contacto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="doc-header">
+    <div class="kicker">Forjo Gestión</div>
+    <h1>Términos de Servicio</h1>
+    <div class="meta">Última actualización: 13 de junio de 2026</div>
+  </div>
+
+  <p>Estos Términos de Servicio ("Términos") regulan el uso de <strong>Forjo Gestión</strong> (el "Servicio"), un software de gestión de turnos provisto por <strong>Forjo Studio</strong> ("Forjo", "nosotros"), disponible en <a href="https://forjo.studio">forjo.studio</a> y <a href="https://gestion.forjo.studio">gestion.forjo.studio</a>. Al registrarte o usar el Servicio, aceptás estos Términos.</p>
+
+  <h2>1. Descripción del Servicio</h2>
+  <p>Forjo Gestión es una plataforma SaaS que permite a profesionales y negocios administrar turnos, clientes, horarios y cobros. El Servicio incluye una página pública de reservas, un panel de administración y funciones opcionales como la sincronización con Google Calendar.</p>
+
+  <h2>2. Cuentas y registro</h2>
+  <p>Para usar el Servicio debés crear una cuenta con información veraz y mantenerla actualizada. Sos responsable de la confidencialidad de tus credenciales y de toda actividad realizada bajo tu cuenta.</p>
+
+  <h2>3. Uso aceptable</h2>
+  <p>Te comprometés a no usar el Servicio para fines ilícitos ni de forma que vulnere derechos de terceros. En particular, no podés:</p>
+  <ul>
+    <li>Cargar datos sin tener base legal para ello, ni datos de terceros sin su consentimiento cuando corresponda.</li>
+    <li>Intentar vulnerar la seguridad o el aislamiento de datos entre negocios.</li>
+    <li>Usar el Servicio para enviar spam o comunicaciones no solicitadas.</li>
+  </ul>
+
+  <h2>4. Datos de tus clientes</h2>
+  <p>Como usuario del Servicio, sos responsable de los datos de tus propios clientes que cargás en Forjo y de cumplir con la normativa de protección de datos aplicable. Forjo actúa como proveedor de tecnología que procesa esos datos en tu nombre.</p>
+
+  <h2>5. Integración con Google</h2>
+  <p>La integración con Google Calendar es opcional y requiere tu consentimiento mediante el flujo oficial de Google. El uso de esta integración se rige además por nuestra <a href="privacidad.html">Política de Privacidad</a> y por los términos de Google. Podés revocar el acceso en cualquier momento.</p>
+
+  <h2>6. Planes, pagos y suscripciones</h2>
+  <p>El Servicio se ofrece bajo planes de suscripción con un período de prueba gratuito. Los pagos se procesan a través de MercadoPago. Los precios pueden ajustarse periódicamente; cualquier cambio se comunicará con anticipación razonable. La falta de pago puede derivar en la suspensión del acceso al Servicio.</p>
+
+  <h2>7. Cancelación</h2>
+  <p>Podés cancelar tu suscripción en cualquier momento desde tu cuenta o escribiendo a <a href="mailto:hola@forjo.studio">hola@forjo.studio</a>. La cancelación detiene futuras renovaciones; los pagos ya realizados no son reembolsables salvo que la ley aplicable disponga lo contrario.</p>
+
+  <h2>8. Propiedad intelectual</h2>
+  <p>El Servicio, su software, marca y diseño son propiedad de Forjo Studio. Estos Términos no te otorgan ningún derecho sobre la propiedad intelectual de Forjo más allá del uso del Servicio conforme a lo aquí establecido. Los datos que cargás siguen siendo tuyos.</p>
+
+  <h2>9. Disponibilidad y cambios</h2>
+  <p>Procuramos mantener el Servicio disponible y seguro, pero no garantizamos disponibilidad ininterrumpida. Podemos modificar, suspender o discontinuar funciones, notificándolo cuando corresponda.</p>
+
+  <h2>10. Limitación de responsabilidad</h2>
+  <p>El Servicio se provee "tal cual". En la máxima medida permitida por la ley, Forjo no será responsable por daños indirectos, incidentales o consecuentes derivados del uso o la imposibilidad de uso del Servicio.</p>
+
+  <h2>11. Modificaciones de los Términos</h2>
+  <p>Podemos actualizar estos Términos. Publicaremos la versión vigente en esta página con su fecha. El uso continuado del Servicio tras un cambio implica la aceptación de los nuevos Términos.</p>
+
+  <h2>12. Ley aplicable y contacto</h2>
+  <p>Estos Términos se rigen por la legislación de la República Argentina. Para cualquier consulta: <a href="mailto:hola@forjo.studio">hola@forjo.studio</a>.</p>
+</div>
+
+<footer>
+  <span>© 2026 Forjo Studio · todos los derechos reservados</span>
+  <div class="footer-links">
+    <a href="privacidad.html">Privacidad</a>
+    <a href="index.html">Inicio</a>
+    <a href="mailto:hola@forjo.studio">Contacto</a>
+  </div>
+</footer>
+
+</body>
+</html>
