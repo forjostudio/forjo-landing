@@ -790,8 +790,44 @@ footer {
   text-align: center;
   margin-top: 20px;
 }
+.plans-included {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.plans-included-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.plans-included-items {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 24px;
+}
+.plans-included-items li {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  padding-left: 18px;
+  position: relative;
+}
+.plans-included-items li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 12px;
+}
 .plans-addons {
-  margin-top: 28px;
+  margin-top: 32px;
   text-align: center;
 }
 .plans-addons-label {
@@ -801,21 +837,33 @@ footer {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-.plans-addons-items {
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: left;
+}
+.addon-card {
+  border: 1px solid var(--border);
+  padding: 18px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   gap: 8px;
 }
-.plans-addons-items span {
+.addon-name {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--ink);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.addon-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
 }
 .plans-payment {
   font-family: var(--font-mono);
@@ -861,6 +909,7 @@ footer {
 
 @media (max-width: 768px) {
   .plans-grid { grid-template-columns: 1fr; }
+  .addons-grid { grid-template-columns: 1fr; }
 }
 
 /* ================================================================
@@ -985,7 +1034,7 @@ footer {
     <div class="serv-card" style="grid-column: 1 / -1; border-right: none; border-bottom: 1px solid var(--border);">
       <div class="serv-index">01 / 03 · Producto principal</div>
       <h3 class="title serv-title">Sistema de turnos<br>y gestión integral</h3>
-      <p class="serv-desc">Un sistema completo bajo tu dominio o el nuestro. Tus clientes reservan online, vos gestionás todo desde un panel de administración: turnos, clientes, finanzas y profesionales.</p>
+      <p class="serv-desc">Tus clientes reservan online y pagan la seña automáticamente; vos gestionás turnos, clientes y finanzas desde un solo panel de administración. Bajo tu dominio o el nuestro.</p>
       <div class="serv-tags" style="margin-bottom: 32px;">
         <span class="serv-tag">Reservas online</span>
         <span class="serv-tag">Panel de admin</span>
@@ -1036,12 +1085,31 @@ footer {
         </div>
       </div>
       <p class="plans-note">Una agenda = cada recurso que toma turnos: un profesional, una cancha, una sala.</p>
+      <div class="plans-included">
+        <span class="plans-included-label">Todos los planes incluyen</span>
+        <ul class="plans-included-items">
+          <li>Reservas online 24/7</li>
+          <li>Cobro automático de seña</li>
+          <li>Recordatorios por email</li>
+          <li>Integración con MercadoPago</li>
+          <li>Integración con Google Calendar</li>
+        </ul>
+      </div>
       <div class="plans-addons">
         <span class="plans-addons-label">Add-ons · suman a cualquier plan</span>
-        <div class="plans-addons-items">
-          <span>Dominio propio</span>
-          <span>Agente de WhatsApp</span>
-          <span>Personalización de tu web</span>
+        <div class="addons-grid">
+          <div class="addon-card">
+            <div class="addon-name">Dominio propio</div>
+            <div class="addon-desc">Tu propio dominio (.com / .com.ar) en lugar del subdominio forjo.studio.</div>
+          </div>
+          <div class="addon-card">
+            <div class="addon-name">Agente de WhatsApp</div>
+            <div class="addon-desc">Un asistente que responde consultas y agenda turnos por WhatsApp automáticamente.</div>
+          </div>
+          <div class="addon-card">
+            <div class="addon-name">Personalización de tu web</div>
+            <div class="addon-desc">Diseño a medida de tu página pública, más allá de la plantilla base.</div>
+          </div>
         </div>
       </div>
       <div class="plans-payment">
