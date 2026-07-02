@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { saveContent } from '@/app/admin/actions'
-import type { LandingContent } from '@/lib/content/schema'
+import { PALETTE, type LandingContent, type StyledSeg } from '@/lib/content/schema'
 
 // Labels en español para las claves del contenido (fallback: la clave cruda).
 const LABELS: Record<string, string> = {
@@ -36,6 +36,14 @@ const LABELS: Record<string, string> = {
 const label = (k: string) => LABELS[k] ?? k
 const singular = (k: string) => (k.endsWith('s') ? k.slice(0, -1) : k)
 
+const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline']
+function isStyledSeg(v: unknown): v is StyledSeg {
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return false
+  const o = v as Record<string, unknown>
+  if (typeof o.text !== 'string') return false
+  return Object.keys(o).every((k) => STYLE_KEYS.includes(k))
+}
+
 function blank(v: unknown): unknown {
   if (typeof v === 'string') return ''
   if (typeof v === 'boolean') return false
@@ -43,10 +51,76 @@ function blank(v: unknown): unknown {
   if (Array.isArray(v)) return []
   if (v !== null && typeof v === 'object') {
     const o: Record<string, unknown> = {}
-    for (const key of Object.keys(v as Record<string, unknown>)) o[key] = blank((v as Record<string, unknown>)[key])
+    for (const key of Object.keys(v as Record<string, unknown>))
+      o[key] = blank((v as Record<string, unknown>)[key])
     return o
   }
   return ''
+}
+
+// ---- Texto con formato (color / itálica / subrayado) ----
+function StyledTextField({
+  k,
+  value,
+  onChange,
+}: {
+  k: string
+  value: StyledSeg
+  onChange: (v: StyledSeg) => void
+}) {
+  const set = (patch: Partial<StyledSeg>) => onChange({ ...value, ...patch })
+  return (
+    <div className="adm-field">
+      <span className="adm-label">{label(k)}</span>
+      <input className="adm-input" value={value.text} onChange={(e) => set({ text: e.target.value })} />
+      <div className="adm-styled-toolbar">
+        <button
+          type="button"
+          className={`adm-fmt adm-fmt--b ${value.bold ? 'is-on' : ''}`}
+          onClick={() => set({ bold: !value.bold })}
+          title="Negrita"
+        >
+          B
+        </button>
+        <button
+          type="button"
+          className={`adm-fmt adm-fmt--i ${value.italic ? 'is-on' : ''}`}
+          onClick={() => set({ italic: !value.italic })}
+          title="Itálica"
+        >
+          I
+        </button>
+        <button
+          type="button"
+          className={`adm-fmt adm-fmt--u ${value.underline ? 'is-on' : ''}`}
+          onClick={() => set({ underline: !value.underline })}
+          title="Subrayado"
+        >
+          U
+        </button>
+        <span className="adm-swatches">
+          <button
+            type="button"
+            className={`adm-swatch adm-swatch--none ${!value.color ? 'is-on' : ''}`}
+            onClick={() => set({ color: undefined })}
+            title="Sin color (por defecto)"
+          >
+            ×
+          </button>
+          {PALETTE.map((p) => (
+            <button
+              key={p.value}
+              type="button"
+              title={p.name}
+              onClick={() => set({ color: p.value })}
+              className={`adm-swatch ${value.color === p.value ? 'is-on' : ''}`}
+              style={{ background: p.value }}
+            />
+          ))}
+        </span>
+      </div>
+    </div>
+  )
 }
 
 function FieldNode({
@@ -58,18 +132,16 @@ function FieldNode({
   value: unknown
   onChange: (v: unknown) => void
 }) {
+  if (isStyledSeg(value)) {
+    return <StyledTextField k={k} value={value} onChange={(v) => onChange(v)} />
+  }
   if (typeof value === 'string') {
     const long = value.length > 55 || value.includes('\n')
     return (
       <label className="adm-field">
         <span className="adm-label">{label(k)}</span>
         {long ? (
-          <textarea
-            className="adm-input"
-            rows={2}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-          />
+          <textarea className="adm-input" rows={2} value={value} onChange={(e) => onChange(e.target.value)} />
         ) : (
           <input className="adm-input" value={value} onChange={(e) => onChange(e.target.value)} />
         )}
@@ -98,32 +170,33 @@ function FieldNode({
     )
   }
   if (Array.isArray(value)) {
-    return <ArrayNode k={k} value={value} onChange={(v) => onChange(v)} />
+    return (
+      <fieldset className="adm-group">
+        <legend className="adm-legend">{label(k)}</legend>
+        <ArrayItems k={k} value={value} onChange={(v) => onChange(v)} />
+      </fieldset>
+    )
   }
   if (value !== null && typeof value === 'object') {
     return (
-      <ObjectNode
-        k={k}
-        value={value as Record<string, unknown>}
-        onChange={(v) => onChange(v)}
-      />
+      <fieldset className="adm-group">
+        <legend className="adm-legend">{label(k)}</legend>
+        <ObjectFields value={value as Record<string, unknown>} onChange={(v) => onChange(v)} />
+      </fieldset>
     )
   }
   return null
 }
 
-function ObjectNode({
-  k,
+function ObjectFields({
   value,
   onChange,
 }: {
-  k: string
   value: Record<string, unknown>
   onChange: (v: Record<string, unknown>) => void
 }) {
   return (
-    <fieldset className="adm-group">
-      <legend className="adm-legend">{label(k)}</legend>
+    <>
       {Object.keys(value).map((sub) => (
         <FieldNode
           key={sub}
@@ -132,11 +205,11 @@ function ObjectNode({
           onChange={(v) => onChange({ ...value, [sub]: v })}
         />
       ))}
-    </fieldset>
+    </>
   )
 }
 
-function ArrayNode({
+function ArrayItems({
   k,
   value,
   onChange,
@@ -147,10 +220,8 @@ function ArrayNode({
 }) {
   const isStr = value.length === 0 || typeof value[0] === 'string'
   const add = () => onChange([...value, value.length ? blank(value[0]) : ''])
-
   return (
-    <fieldset className="adm-group">
-      <legend className="adm-legend">{label(k)}</legend>
+    <>
       {value.map((item, i) => (
         <div key={i} className="adm-item">
           <div className="adm-item-head">
@@ -187,8 +258,21 @@ function ArrayNode({
       <button type="button" className="adm-add" onClick={add}>
         + Agregar {label(singular(k)).toLowerCase()}
       </button>
-    </fieldset>
+    </>
   )
+}
+
+// Cuerpo de una sección de nivel superior (sin fieldset: el título lo pone el accordion).
+function SectionBody({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+  if (Array.isArray(value)) {
+    return <ArrayItems k="items" value={value} onChange={(v) => onChange(v)} />
+  }
+  if (value !== null && typeof value === 'object') {
+    return (
+      <ObjectFields value={value as Record<string, unknown>} onChange={(v) => onChange(v)} />
+    )
+  }
+  return <FieldNode k="" value={value} onChange={onChange} />
 }
 
 const ORDER = ['seo', 'nav', 'hero', 'marquee', 'services', 'process', 'work', 'about', 'contact', 'footer']
@@ -210,13 +294,16 @@ export function ContentEditor({ initial }: { initial: LandingContent }) {
 
   return (
     <div className="adm-editor">
-      {ORDER.map((k) => (
-        <FieldNode
-          key={k}
-          k={k}
-          value={content[k]}
-          onChange={(v) => setContent({ ...content, [k]: v })}
-        />
+      {ORDER.map((k, i) => (
+        <details key={k} className="adm-accordion" open={i === 0}>
+          <summary className="adm-accordion-summary">{label(k)}</summary>
+          <div className="adm-accordion-body">
+            <SectionBody
+              value={content[k]}
+              onChange={(v) => setContent({ ...content, [k]: v })}
+            />
+          </div>
+        </details>
       ))}
       <div className="adm-savebar">
         <button className="adm-btn adm-btn--primary" onClick={onSave} disabled={saving}>

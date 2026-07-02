@@ -5,6 +5,25 @@
 //  landing se ve igual que el HTML original.
 // ============================================================
 
+/** Segmento de título con formato editable. El texto va siempre; el resto es
+ *  opcional y por defecto reproduce el diseño original. */
+export interface StyledSeg {
+  text: string
+  color?: string // hex de la paleta (PALETTE); vacío = color heredado del título
+  bold?: boolean
+  italic?: boolean
+  underline?: boolean
+}
+
+/** Paleta de la marca (colores preseteados para los títulos). */
+export const PALETTE: { name: string; value: string }[] = [
+  { name: 'Crema', value: '#f3ead8' },
+  { name: 'Naranja', value: '#d94a2b' },
+  { name: 'Azul', value: '#7aa6d6' },
+  { name: 'Amarillo', value: '#f4c543' },
+  { name: 'Apagado', value: '#a39989' },
+]
+
 export interface Plan {
   name: string
   price: string
@@ -51,11 +70,11 @@ export interface LandingContent {
   nav: { links: { label: string; href: string }[]; ctaLabel: string; ctaHref: string }
   hero: {
     kicker: string
-    headlinePre: string
-    headlineAccent: string
-    headlineMid: string
-    headlineEm: string
-    headlinePost: string
+    headlinePre: StyledSeg
+    headlineAccent: StyledSeg
+    headlineMid: StyledSeg
+    headlineEm: StyledSeg
+    headlinePost: StyledSeg
     sub: string
     ctaPrimaryLabel: string
     ctaPrimaryHref: string
@@ -113,17 +132,17 @@ export interface LandingContent {
   }
   about: {
     kicker: string
-    headlinePre: string
-    headlineMid: string
-    headlineEm: string
-    headlinePost: string
+    headlinePre: StyledSeg
+    headlineMid: StyledSeg
+    headlineEm: StyledSeg
+    headlinePost: StyledSeg
     body: string[]
     stats: Stat[]
   }
   contact: {
     kicker: string
-    headline1: string
-    headline2: string
+    headline1: StyledSeg
+    headline2: StyledSeg
     sub: string
     boxLabel: string
     email: string
@@ -164,11 +183,11 @@ export const DEFAULT_CONTENT: LandingContent = {
   },
   hero: {
     kicker: '▶ estudio web · buenos aires · est. 2025',
-    headlinePre: 'Forjamos ',
-    headlineAccent: 'ideas',
-    headlineMid: 'que ',
-    headlineEm: 'convierten',
-    headlinePost: '.',
+    headlinePre: { text: 'Forjamos ' },
+    headlineAccent: { text: 'ideas', color: '#d94a2b' },
+    headlineMid: { text: 'que ' },
+    headlineEm: { text: 'convierten', italic: true, color: '#7aa6d6' },
+    headlinePost: { text: '.' },
     sub: 'Construimos el sistema que tu negocio necesita, la web que te representa o el software que todavía no existe.',
     ctaPrimaryLabel: 'Empecemos un proyecto →',
     ctaPrimaryHref: '#contacto',
@@ -352,10 +371,10 @@ export const DEFAULT_CONTENT: LandingContent = {
   },
   about: {
     kicker: '◆ nosotros',
-    headlinePre: 'Estudio chico,',
-    headlineMid: 'ambición ',
-    headlineEm: 'grande',
-    headlinePost: '.',
+    headlinePre: { text: 'Estudio chico,' },
+    headlineMid: { text: 'ambición ' },
+    headlineEm: { text: 'grande', italic: true, color: '#d94a2b' },
+    headlinePost: { text: '.' },
     body: [
       'Forjo es un estudio independiente: tomamos pocos proyectos por mes para meternos a fondo en cada uno. Código a medida, sin plantillas.',
       'Sin cajas negras ni intermediarios: sabés exactamente qué se construye y por qué. Hablás siempre con la persona que está al frente de tu proyecto.',
@@ -369,8 +388,8 @@ export const DEFAULT_CONTENT: LandingContent = {
   },
   contact: {
     kicker: '◆ hablemos',
-    headline1: '¿Tenés una idea?',
-    headline2: 'Vamos a forjarla.',
+    headline1: { text: '¿Tenés una idea?' },
+    headline2: { text: 'Vamos a forjarla.' },
     sub: 'Contanos en un par de líneas qué tenés en mente. Te respondemos en menos de 24hs con una primera idea y un plan.',
     boxLabel: '◇ contacto directo',
     email: 'hola@forjo.studio',

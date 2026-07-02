@@ -13,6 +13,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         <nav className="adm-nav">
           <Link href="/admin">Contenido</Link>
           <Link href="/admin/mensajes">Mensajes</Link>
+          <Link href="/admin/cuenta">Cuenta</Link>
           <a href="/" target="_blank" rel="noopener">
             Ver landing ↗
           </a>

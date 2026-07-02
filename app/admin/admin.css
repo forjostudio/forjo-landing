@@ -50,7 +50,79 @@
 }
 .adm-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
 
-.adm-editor { display: flex; flex-direction: column; gap: 18px; }
+.adm-editor { display: flex; flex-direction: column; gap: 12px; }
+
+/* Secciones plegables */
+.adm-accordion {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.adm-accordion-summary {
+  cursor: pointer;
+  padding: 15px 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 16px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.adm-accordion-summary::-webkit-details-marker { display: none; }
+.adm-accordion-summary::after {
+  content: '▸';
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+.adm-accordion[open] > .adm-accordion-summary::after { transform: rotate(90deg); }
+.adm-accordion-summary:hover { background: var(--bg); }
+.adm-accordion-body {
+  padding: 4px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Texto con formato: toolbar + swatches */
+.adm-styled-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+.adm-fmt {
+  width: 30px;
+  height: 28px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+.adm-fmt.is-on { border-color: var(--accent); color: var(--accent); }
+.adm-fmt--b { font-weight: 800; }
+.adm-fmt--i { font-style: italic; }
+.adm-fmt--u { text-decoration: underline; }
+.adm-swatches { display: flex; gap: 5px; align-items: center; margin-left: 8px; }
+.adm-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  padding: 0;
+}
+.adm-swatch.is-on { outline: 2px solid var(--ink); outline-offset: 1px; }
+.adm-swatch--none {
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border);
+}
 .adm-group {
   border: 1px solid var(--border);
   border-radius: 8px;

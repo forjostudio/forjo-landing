@@ -19,6 +19,30 @@ function deepMerge<T>(base: T, over: unknown): T {
   return out as T
 }
 
+// Campos que pasaron de string a segmento con estilo (StyledSeg). Si en la DB
+// están guardados como string (formato viejo), los envolvemos en { text } para
+// que el merge conserve el estilo por defecto y el texto guardado.
+const STYLED_PATHS: [string, string[]][] = [
+  ['hero', ['headlinePre', 'headlineAccent', 'headlineMid', 'headlineEm', 'headlinePost']],
+  ['about', ['headlinePre', 'headlineMid', 'headlineEm', 'headlinePost']],
+  ['contact', ['headline1', 'headline2']],
+]
+
+function coerceStyledSegs(data: unknown): unknown {
+  if (!isObj(data)) return data
+  const out = { ...data }
+  for (const [section, keys] of STYLED_PATHS) {
+    const sec = out[section]
+    if (!isObj(sec)) continue
+    const next = { ...sec }
+    for (const k of keys) {
+      if (typeof next[k] === 'string') next[k] = { text: next[k] }
+    }
+    out[section] = next
+  }
+  return out
+}
+
 /** Contenido de la landing: lo guardado en DB mergeado sobre el default. Si no
  *  hay fila o falla la lectura, devuelve el default (la landing se ve igual). */
 export async function getContent(): Promise<LandingContent> {
@@ -29,7 +53,7 @@ export async function getContent(): Promise<LandingContent> {
       .select('data')
       .eq('id', 'forjo')
       .maybeSingle()
-    return deepMerge(DEFAULT_CONTENT, data?.data)
+    return deepMerge(DEFAULT_CONTENT, coerceStyledSegs(data?.data))
   } catch {
     return DEFAULT_CONTENT
   }

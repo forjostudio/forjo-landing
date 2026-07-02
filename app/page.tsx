@@ -1,7 +1,21 @@
 import type { Metadata } from 'next'
+import type { CSSProperties } from 'react'
 import { ScrollFX } from '@/components/ScrollFX'
 import { ContactForm } from '@/components/ContactForm'
 import { getContent } from '@/lib/content/get'
+import type { StyledSeg } from '@/lib/content/schema'
+
+/** Segmento de título con formato. Sin estilo e sin itálica, se renderiza como
+ *  texto crudo (idéntico al original). */
+function Seg({ seg }: { seg: StyledSeg }) {
+  const style: CSSProperties = {}
+  if (seg.color) style.color = seg.color
+  if (seg.bold) style.fontWeight = 700
+  if (seg.underline) style.textDecoration = 'underline'
+  const hasStyle = Boolean(seg.color || seg.bold || seg.underline)
+  if (seg.italic) return <em style={hasStyle ? style : undefined}>{seg.text}</em>
+  return hasStyle ? <span style={style}>{seg.text}</span> : <>{seg.text}</>
+}
 
 // La landing lee el contenido editable de la DB en cada request.
 export const dynamic = 'force-dynamic'
@@ -79,12 +93,12 @@ export default async function Home() {
           <div>
             <div className="kicker hero-kicker">{c.hero.kicker}</div>
             <h1 className="title hero-headline">
-              {c.hero.headlinePre}
-              <span className="accent">{c.hero.headlineAccent}</span>
+              <Seg seg={c.hero.headlinePre} />
+              <Seg seg={c.hero.headlineAccent} />
               <br />
-              {c.hero.headlineMid}
-              <em>{c.hero.headlineEm}</em>
-              {c.hero.headlinePost}
+              <Seg seg={c.hero.headlineMid} />
+              <Seg seg={c.hero.headlineEm} />
+              <Seg seg={c.hero.headlinePost} />
             </h1>
             <p className="hero-sub">{c.hero.sub}</p>
             <div className="hero-actions">
@@ -355,11 +369,11 @@ export default async function Home() {
           <div>
             <div className="kicker about-kicker">{c.about.kicker}</div>
             <h2 className="title about-headline">
-              {c.about.headlinePre}
+              <Seg seg={c.about.headlinePre} />
               <br />
-              {c.about.headlineMid}
-              <em>{c.about.headlineEm}</em>
-              {c.about.headlinePost}
+              <Seg seg={c.about.headlineMid} />
+              <Seg seg={c.about.headlineEm} />
+              <Seg seg={c.about.headlinePost} />
             </h2>
             {c.about.body.map((p, i) => (
               <p key={i} className="about-body">
@@ -385,9 +399,9 @@ export default async function Home() {
           <div>
             <div className="contact-kicker">{c.contact.kicker}</div>
             <h2 className="contact-headline">
-              {c.contact.headline1}
+              <Seg seg={c.contact.headline1} />
               <br />
-              {c.contact.headline2}
+              <Seg seg={c.contact.headline2} />
             </h2>
             <p className="contact-sub">{c.contact.sub}</p>
             <ContactForm title={c.contact.formTitle} />
