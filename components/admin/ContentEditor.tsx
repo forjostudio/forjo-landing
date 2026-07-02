@@ -2,7 +2,11 @@
 
 import { useState } from 'react'
 import { saveContent } from '@/app/admin/actions'
+import { ImageUpload } from './ImageUpload'
 import { PALETTE, type LandingContent, type StyledSeg } from '@/lib/content/schema'
+
+// Campos string que son imágenes (se editan con subida a Storage).
+const IMAGE_KEYS = new Set(['thumb', 'ogImage'])
 
 // Labels en español para las claves del contenido (fallback: la clave cruda).
 const LABELS: Record<string, string> = {
@@ -149,6 +153,9 @@ function FieldNode({
 }) {
   if (isStyledSeg(value)) {
     return <StyledTextField k={k} value={value} onChange={(v) => onChange(v)} />
+  }
+  if (typeof value === 'string' && IMAGE_KEYS.has(k)) {
+    return <ImageUpload label={label(k)} value={value} onChange={(v) => onChange(v)} />
   }
   if (typeof value === 'string') {
     const long = value.length > 55 || value.includes('\n')
@@ -298,13 +305,20 @@ export function ContentEditor({ initial }: { initial: LandingContent }) {
   )
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState('')
+  const [preview, setPreview] = useState(false)
+  const [previewKey, setPreviewKey] = useState(0)
 
   async function onSave() {
     setSaving(true)
     setMsg('')
     const res = await saveContent(content as unknown as LandingContent)
     setSaving(false)
-    setMsg(res?.error ? `Error: ${res.error}` : 'Guardado ✓')
+    if (res?.error) {
+      setMsg(`Error: ${res.error}`)
+      return
+    }
+    setMsg('Guardado ✓')
+    setPreviewKey((k) => k + 1) // refresca la vista previa con lo recién publicado
   }
 
   return (
@@ -324,8 +338,22 @@ export function ContentEditor({ initial }: { initial: LandingContent }) {
         <button className="adm-btn adm-btn--primary" onClick={onSave} disabled={saving}>
           {saving ? 'Guardando…' : 'Guardar cambios'}
         </button>
+        <button type="button" className="adm-btn" onClick={() => setPreview((v) => !v)}>
+          {preview ? 'Ocultar vista previa' : 'Vista previa'}
+        </button>
         {msg && <span className="adm-msg">{msg}</span>}
       </div>
+      {preview && (
+        <div className="adm-preview">
+          <div className="adm-preview-bar">
+            Vista previa (se actualiza al guardar) ·{' '}
+            <a href="/" target="_blank" rel="noopener">
+              abrir en pestaña ↗
+            </a>
+          </div>
+          <iframe key={previewKey} src={`/?v=${previewKey}`} title="Vista previa de la landing" />
+        </div>
+      )}
     </div>
   )
 }
