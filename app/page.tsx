@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ScrollFX } from '@/components/ScrollFX'
+import { ContactForm } from '@/components/ContactForm'
 import { getContent } from '@/lib/content/get'
 
 // La landing lee el contenido editable de la DB en cada request.
@@ -389,6 +390,7 @@ export default async function Home() {
               {c.contact.headline2}
             </h2>
             <p className="contact-sub">{c.contact.sub}</p>
+            <ContactForm title={c.contact.formTitle} />
           </div>
 
           <div className="contact-box">
