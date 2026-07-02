@@ -87,6 +87,33 @@
   border-top: 1px solid var(--border);
 }
 
+/* Grupos anidados plegables (segundo nivel y más) */
+.adm-sub { border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+.adm-sub-summary {
+  cursor: pointer;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.adm-sub-summary::-webkit-details-marker { display: none; }
+.adm-sub-summary::after { content: '▸'; color: var(--muted); transition: transform 0.2s ease; }
+.adm-sub[open] > .adm-sub-summary::after { transform: rotate(90deg); }
+.adm-sub-summary:hover { color: var(--ink); }
+.adm-sub-body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+}
+
 /* Texto con formato: toolbar + swatches */
 .adm-styled-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
 .adm-fmt {

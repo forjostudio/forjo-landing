@@ -193,18 +193,22 @@ function FieldNode({
   }
   if (Array.isArray(value)) {
     return (
-      <fieldset className="adm-group">
-        <legend className="adm-legend">{label(k)}</legend>
-        <ArrayItems k={k} value={value} onChange={(v) => onChange(v)} />
-      </fieldset>
+      <details className="adm-sub">
+        <summary className="adm-sub-summary">{label(k)}</summary>
+        <div className="adm-sub-body">
+          <ArrayItems k={k} value={value} onChange={(v) => onChange(v)} />
+        </div>
+      </details>
     )
   }
   if (value !== null && typeof value === 'object') {
     return (
-      <fieldset className="adm-group">
-        <legend className="adm-legend">{label(k)}</legend>
-        <ObjectFields value={value as Record<string, unknown>} onChange={(v) => onChange(v)} />
-      </fieldset>
+      <details className="adm-sub">
+        <summary className="adm-sub-summary">{label(k)}</summary>
+        <div className="adm-sub-body">
+          <ObjectFields value={value as Record<string, unknown>} onChange={(v) => onChange(v)} />
+        </div>
+      </details>
     )
   }
   return null
@@ -261,6 +265,15 @@ function ArrayItems({
               onChange={(e) => {
                 const next = value.slice()
                 next[i] = e.target.value
+                onChange(next)
+              }}
+            />
+          ) : item !== null && typeof item === 'object' && !Array.isArray(item) ? (
+            <ObjectFields
+              value={item as Record<string, unknown>}
+              onChange={(v) => {
+                const next = value.slice()
+                next[i] = v
                 onChange(next)
               }}
             />
