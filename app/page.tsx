@@ -1,13 +1,39 @@
+import type { Metadata } from 'next'
 import { ScrollFX } from '@/components/ScrollFX'
+import { getContent } from '@/lib/content/get'
 
-const MARQUEE = [
-  'Sitios institucionales',
-  'Optimizaciones SEO',
-  'Landing pages',
-  'Software a medida',
-  'Branding digital',
-  'Hosting + dominio',
-]
+// La landing lee el contenido editable de la DB en cada request.
+export const dynamic = 'force-dynamic'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const c = await getContent()
+  return {
+    title: c.seo.title,
+    description: c.seo.description,
+    openGraph: {
+      type: 'website',
+      title: c.seo.ogTitle,
+      description: c.seo.ogDescription,
+      url: 'https://forjo.studio/',
+      siteName: 'Forjo Studio',
+      locale: 'es_AR',
+      images: [
+        {
+          url: c.seo.ogImage,
+          width: 1200,
+          height: 630,
+          alt: 'Forjo Studio — estudio web independiente',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: c.seo.ogTitle,
+      description: c.seo.ogDescription,
+      images: [c.seo.ogImage],
+    },
+  }
+}
 
 function ForjoMark({ width, height }: { width: number; height: number }) {
   return (
@@ -20,7 +46,10 @@ function ForjoMark({ width, height }: { width: number; height: number }) {
   )
 }
 
-export default function Home() {
+export default async function Home() {
+  const c = await getContent()
+  const s = c.services
+
   return (
     <>
       {/* NAV */}
@@ -32,13 +61,13 @@ export default function Home() {
           </span>
         </a>
         <div className="nav-links">
-          <a href="#servicios">Servicios</a>
-          <a href="#proceso">Proceso</a>
-          <a href="#trabajo">Trabajo</a>
-          <a href="#nosotros">Nosotros</a>
-          <a href="https://gestion.forjo.studio/login">Ingresar</a>
-          <a className="btn btn--primary btn--sm" href="#contacto">
-            Contacto
+          {c.nav.links.map((l, i) => (
+            <a key={i} href={l.href}>
+              {l.label}
+            </a>
+          ))}
+          <a className="btn btn--primary btn--sm" href={c.nav.ctaHref}>
+            {c.nav.ctaLabel}
           </a>
         </div>
       </nav>
@@ -47,22 +76,22 @@ export default function Home() {
       <section className="hero">
         <div className="hero-inner">
           <div>
-            <div className="kicker hero-kicker">▶ estudio web · buenos aires · est. 2025</div>
+            <div className="kicker hero-kicker">{c.hero.kicker}</div>
             <h1 className="title hero-headline">
-              Forjamos <span className="accent">ideas</span>
+              {c.hero.headlinePre}
+              <span className="accent">{c.hero.headlineAccent}</span>
               <br />
-              que <em>convierten</em>.
+              {c.hero.headlineMid}
+              <em>{c.hero.headlineEm}</em>
+              {c.hero.headlinePost}
             </h1>
-            <p className="hero-sub">
-              Construimos el sistema que tu negocio necesita, la web que te representa o el software
-              que todavía no existe.
-            </p>
+            <p className="hero-sub">{c.hero.sub}</p>
             <div className="hero-actions">
-              <a className="btn btn--primary" href="#contacto">
-                Empecemos un proyecto →
+              <a className="btn btn--primary" href={c.hero.ctaPrimaryHref}>
+                {c.hero.ctaPrimaryLabel}
               </a>
-              <a className="btn" href="#trabajo">
-                Ver trabajo
+              <a className="btn" href={c.hero.ctaSecondaryHref}>
+                {c.hero.ctaSecondaryLabel}
               </a>
             </div>
           </div>
@@ -82,7 +111,7 @@ export default function Home() {
       <div className="marquee-wrap" aria-hidden="true">
         <div className="marquee-track">
           {[0, 1, 2].map((rep) =>
-            MARQUEE.map((text, i) => (
+            c.marquee.map((text, i) => (
               <span key={`${rep}-${i}`} className="marquee-item">
                 {text}
               </span>
@@ -95,15 +124,12 @@ export default function Home() {
       <section className="section" id="servicios">
         <div className="section-header">
           <div className="section-header-left">
-            <div className="kicker">◆ servicios</div>
+            <div className="kicker">{s.kicker}</div>
             <h2 className="title" style={{ fontSize: 'clamp(40px, 4vw, 56px)', marginTop: 16 }}>
-              Lo que forjamos.
+              {s.title}
             </h2>
           </div>
-          <p className="section-header-right">
-            Tres servicios, todos a medida. Cada proyecto arranca con una conversación sobre qué
-            necesitás, qué no, y cuál es la forma más simple de llegar.
-          </p>
+          <p className="section-header-right">{s.intro}</p>
         </div>
 
         <div className="services-grid">
@@ -111,168 +137,101 @@ export default function Home() {
             className="serv-card"
             style={{ gridColumn: '1 / -1', borderRight: 'none', borderBottom: '1px solid var(--border)' }}
           >
-            <div className="serv-index">01 / 03 · Producto principal</div>
+            <div className="serv-index">{s.turnos.index}</div>
             <h3 className="title serv-title">
-              Sistema de turnos
-              <br />y gestión integral
+              {s.turnos.titleLine1}
+              <br />
+              {s.turnos.titleLine2}
             </h3>
-            <p className="serv-desc">
-              Tus clientes reservan online y pagan la seña automáticamente; vos gestionás turnos,
-              clientes y finanzas desde un solo panel de administración. Bajo tu dominio o el
-              nuestro.
-            </p>
+            <p className="serv-desc">{s.turnos.desc}</p>
             <div className="serv-tags" style={{ marginBottom: 32 }}>
-              <span className="serv-tag">Reservas online</span>
-              <span className="serv-tag">Panel de admin</span>
-              <span className="serv-tag">Gestión de clientes</span>
-              <span className="serv-tag">Control de finanzas</span>
-              <span className="serv-tag">MercadoPago</span>
-              <span className="serv-tag">Multi-agenda</span>
+              {s.turnos.tags.map((t, i) => (
+                <span key={i} className="serv-tag">
+                  {t}
+                </span>
+              ))}
             </div>
             <div className="plans-grid">
-              <div className="plan-card">
-                <div className="plan-name">Básico</div>
-                <div className="plan-price">
-                  $15.000<span>/mes</span>
+              {s.turnos.plans.map((p, i) => (
+                <div key={i} className={`plan-card${p.featured ? ' plan-card--featured' : ''}`}>
+                  <div className="plan-name">{p.name}</div>
+                  <div className="plan-price">
+                    {p.price}
+                    <span>{p.unit}</span>
+                  </div>
+                  {p.badge && <div className="plan-badge">{p.badge}</div>}
+                  <ul className="plan-features">
+                    {p.features.map((f, j) => (
+                      <li key={j}>{f}</li>
+                    ))}
+                  </ul>
+                  <a className="btn btn--primary btn--sm plan-cta" href={p.ctaHref}>
+                    {p.ctaLabel}
+                  </a>
                 </div>
-                <div className="plan-badge">1er mes gratis</div>
-                <ul className="plan-features">
-                  <li>1 agenda</li>
-                  <li>Dominio forjo.studio incluido</li>
-                  <li>Soporte WhatsApp · respuesta en 24hs</li>
-                  <li>2 modificaciones por mes</li>
-                  <li>Onboarding incluido</li>
-                </ul>
-                <a
-                  className="btn btn--primary btn--sm plan-cta"
-                  href="https://gestion.forjo.studio/register?plan=basic"
-                >
-                  Empezar →
-                </a>
-              </div>
-              <div className="plan-card plan-card--featured">
-                <div className="plan-name">Estudio</div>
-                <div className="plan-price">
-                  $30.000<span>/mes</span>
-                </div>
-                <div className="plan-badge">1er mes gratis</div>
-                <ul className="plan-features">
-                  <li>Hasta 5 agendas</li>
-                  <li>Dominio forjo.studio incluido</li>
-                  <li>Soporte WhatsApp · respuesta en 12hs</li>
-                  <li>4 modificaciones por mes</li>
-                  <li>Onboarding incluido</li>
-                </ul>
-                <a
-                  className="btn btn--primary btn--sm plan-cta"
-                  href="https://gestion.forjo.studio/register?plan=studio"
-                >
-                  Empezar →
-                </a>
-              </div>
-              <div className="plan-card">
-                <div className="plan-name">Pro</div>
-                <div className="plan-price">
-                  $50.000<span>/mes</span>
-                </div>
-                <div className="plan-badge">1er mes gratis</div>
-                <ul className="plan-features">
-                  <li>Hasta 15 agendas</li>
-                  <li>Dominio forjo.studio incluido</li>
-                  <li>Soporte WhatsApp · respuesta en 12hs</li>
-                  <li>8 modificaciones por mes</li>
-                  <li>Onboarding incluido</li>
-                </ul>
-                <a
-                  className="btn btn--primary btn--sm plan-cta"
-                  href="https://gestion.forjo.studio/register?plan=pro"
-                >
-                  Empezar →
-                </a>
-              </div>
+              ))}
             </div>
-            <p className="plans-note">
-              Una agenda = cada recurso que toma turnos: un profesional, una cancha, una sala.
-            </p>
+            <p className="plans-note">{s.turnos.note}</p>
             <div className="plans-included">
-              <span className="plans-included-label">Todos los planes incluyen</span>
+              <span className="plans-included-label">{s.turnos.includedLabel}</span>
               <ul className="plans-included-items">
-                <li>Reservas online 24/7</li>
-                <li>Cobro automático de seña</li>
-                <li>Recordatorios por email</li>
-                <li>Integración con MercadoPago</li>
-                <li>Integración con Google Calendar</li>
+                {s.turnos.included.map((it, i) => (
+                  <li key={i}>{it}</li>
+                ))}
               </ul>
             </div>
             <div className="plans-addons">
-              <span className="plans-addons-label">Add-ons · suman a cualquier plan</span>
+              <span className="plans-addons-label">{s.turnos.addonsLabel}</span>
               <div className="addons-grid">
-                <div className="addon-card">
-                  <div className="addon-name">Dominio propio</div>
-                  <div className="addon-desc">
-                    Tu propio dominio (.com / .com.ar) en lugar del subdominio forjo.studio.
+                {s.turnos.addons.map((a, i) => (
+                  <div key={i} className="addon-card">
+                    <div className="addon-name">{a.name}</div>
+                    <div className="addon-desc">{a.desc}</div>
                   </div>
-                </div>
-                <div className="addon-card">
-                  <div className="addon-name">Agente de WhatsApp</div>
-                  <div className="addon-desc">
-                    Un asistente que responde consultas y agenda turnos por WhatsApp
-                    automáticamente.
-                  </div>
-                </div>
-                <div className="addon-card">
-                  <div className="addon-name">Personalización de tu web</div>
-                  <div className="addon-desc">
-                    Diseño a medida de tu página pública, más allá de la plantilla base.
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="plans-payment">
-              Pagás seguro con <strong>MercadoPago</strong> — tarjeta de crédito, débito o dinero en
-              cuenta.
+              {s.turnos.paymentPre}
+              <strong>{s.turnos.paymentStrong}</strong>
+              {s.turnos.paymentPost}
               <br />
-              Primer mes gratis · sin tarjeta para empezar · cancelás cuando quieras.
+              {s.turnos.paymentLine2}
             </div>
           </div>
 
           <div className="serv-card" style={{ borderRight: '1px solid var(--border)', borderBottom: 'none' }}>
-            <div className="serv-index">02 / 03</div>
-            <h3 className="title serv-title">Sitios web profesionales</h3>
-            <p className="serv-desc">
-              Webs a medida para emprendedores, profesionales e influencers. Sin sistema de turnos,
-              solo tu web.
-            </p>
+            <div className="serv-index">{s.web.index}</div>
+            <h3 className="title serv-title">{s.web.title}</h3>
+            <p className="serv-desc">{s.web.desc}</p>
             <div className="serv-tags" style={{ marginBottom: 24 }}>
-              <span className="serv-tag">Diseño a medida</span>
-              <span className="serv-tag">Dominio propio</span>
-              <span className="serv-tag">Hosting incluido</span>
-              <span className="serv-tag">Formulario de contacto</span>
-              <span className="serv-tag">Mobile-first</span>
+              {s.web.tags.map((t, i) => (
+                <span key={i} className="serv-tag">
+                  {t}
+                </span>
+              ))}
             </div>
             <div className="serv-price" style={{ marginBottom: 20 }}>
-              <s style={{ opacity: 0.5, fontWeight: 400 }}>U$D 200</s> U$D 150{' '}
-              <span>· oferta lanzamiento</span>
+              <s style={{ opacity: 0.5, fontWeight: 400 }}>{s.web.priceOld}</s> {s.web.price}{' '}
+              <span>{s.web.priceNote}</span>
             </div>
-            <a className="btn btn--sm" href="#contacto">
-              Cotizar →
+            <a className="btn btn--sm" href={s.web.ctaHref}>
+              {s.web.ctaLabel}
             </a>
           </div>
 
           <div className="serv-card" style={{ borderRight: 'none', borderBottom: 'none' }}>
-            <div className="serv-index">03 / 03</div>
-            <h3 className="title serv-title">Software a medida</h3>
-            <p className="serv-desc">
-              Si lo que necesitás no entra en un molde, lo construimos desde cero. Dashboards, CRMs,
-              herramientas internas, integraciones.
-            </p>
+            <div className="serv-index">{s.software.index}</div>
+            <h3 className="title serv-title">{s.software.title}</h3>
+            <p className="serv-desc">{s.software.desc}</p>
             <div className="serv-tags" style={{ marginBottom: 24 }}>
-              <span className="serv-tag">React + Node</span>
-              <span className="serv-tag">Base de datos</span>
-              <span className="serv-tag">Autenticación</span>
-              <span className="serv-tag">API integraciones</span>
+              {s.software.tags.map((t, i) => (
+                <span key={i} className="serv-tag">
+                  {t}
+                </span>
+              ))}
             </div>
-            <div className="serv-price">Cotización según proyecto</div>
+            <div className="serv-price">{s.software.price}</div>
           </div>
         </div>
       </section>
@@ -282,54 +241,26 @@ export default function Home() {
         <div className="section-header">
           <div className="section-header-left">
             <div className="kicker" style={{ color: 'rgba(243,234,216,0.55)' }}>
-              ◆ proceso
+              {c.process.kicker}
             </div>
             <h2
               className="title"
               style={{ fontSize: 'clamp(40px, 4vw, 56px)', marginTop: 16, color: 'var(--cream)' }}
             >
-              Cómo forjamos.
+              {c.process.title}
             </h2>
           </div>
-          <p className="section-header-right">
-            Cuatro etapas, cada una con entregables claros. Sin sorpresas, sin &quot;fees
-            ocultos&quot;, sin proyectos que se eternizan.
-          </p>
+          <p className="section-header-right">{c.process.intro}</p>
         </div>
 
         <div className="process-grid">
-          <div className="process-step">
-            <div className="process-meta">01 · ENCENDER</div>
-            <div className="process-title">Descubrimiento</div>
-            <p className="process-desc">
-              Empezamos con una llamada. Te escuchamos: tu negocio, tu público, qué te traba hoy.
-              Salimos con un plan claro y un presupuesto cerrado.
-            </p>
-          </div>
-          <div className="process-step">
-            <div className="process-meta">02 · MOLDEAR</div>
-            <div className="process-title">Diseño</div>
-            <p className="process-desc">
-              Wireframes primero, después diseño visual. Iteramos con vos en vivo — sin idas y
-              vueltas eternas por mail. Aprobás cada pantalla antes de seguir.
-            </p>
-          </div>
-          <div className="process-step">
-            <div className="process-meta">03 · TEMPLAR</div>
-            <div className="process-title">Desarrollo</div>
-            <p className="process-desc">
-              Código limpio, responsive, rápido. Te damos acceso a una preview desde el día uno para
-              que veas el avance y opines.
-            </p>
-          </div>
-          <div className="process-step">
-            <div className="process-meta">04 · ENTREGAR</div>
-            <div className="process-title">Lanzamiento</div>
-            <p className="process-desc">
-              Hosting, dominio, certificados, capacitación. Salimos al aire juntos y te acompañamos
-              los primeros 30 días para ajustar lo que haga falta.
-            </p>
-          </div>
+          {c.process.steps.map((st, i) => (
+            <div key={i} className="process-step">
+              <div className="process-meta">{st.meta}</div>
+              <div className="process-title">{st.title}</div>
+              <p className="process-desc">{st.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -337,97 +268,83 @@ export default function Home() {
       <section className="section" id="trabajo">
         <div className="work-header">
           <div className="work-header-left">
-            <div className="kicker">◆ trabajo · selección</div>
+            <div className="kicker">{c.work.kicker}</div>
             <h2 className="title" style={{ fontSize: 'clamp(40px, 4vw, 56px)', marginTop: 16 }}>
-              Proyectos recientes.
+              {c.work.title}
             </h2>
           </div>
-          <a href="#" className="work-all-link">
-            Ver todos →
+          <a href={c.work.allHref} className="work-all-link">
+            {c.work.allLabel}
           </a>
         </div>
 
         <div className="work-grid">
-          <div className="work-card">
-            <a
-              href="https://jjotalab.com"
-              target="_blank"
-              rel="noopener"
-              className="work-thumb-link"
-              aria-label="Ver jjotalab.com"
-            >
+          {c.work.projects.map((p, i) => (
+            <div key={i} className="work-card">
+              <a
+                href={p.url}
+                target="_blank"
+                rel="noopener"
+                className="work-thumb-link"
+                aria-label={`Ver ${p.name}`}
+              >
+                <div
+                  className="work-thumb"
+                  style={{
+                    backgroundImage: `url('${p.thumb}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'left center',
+                  }}
+                >
+                  <div className="work-thumb-bg" style={{ display: 'none' }}></div>
+                </div>
+              </a>
+              <div className="work-meta">
+                <div>
+                  <div className="work-name">
+                    <a href={p.url} target="_blank" rel="noopener">
+                      {p.name}
+                    </a>
+                  </div>
+                  <div className="work-cat">{p.cat}</div>
+                </div>
+                <div className="work-year">{p.year}</div>
+              </div>
+              {p.demoLabel && (
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="work-all-link"
+                  style={{ display: 'inline-block', marginTop: 12 }}
+                >
+                  {p.demoLabel}
+                </a>
+              )}
+            </div>
+          ))}
+
+          {Array.from({ length: c.work.placeholders }).map((_, i) => (
+            <div key={`ph-${i}`} className="work-card work-card--placeholder">
               <div
                 className="work-thumb"
-                style={{
-                  backgroundImage: "url('/jjotalab.png?v=2')",
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'left center',
-                }}
+                style={{ background: '#1a1714', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               >
-                <div className="work-thumb-bg" style={{ display: 'none' }}></div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#a39989' }}>
+                  ¿El próximo?
+                </span>
               </div>
-            </a>
-            <div className="work-meta">
-              <div>
-                <div className="work-name">
-                  <a href="https://jjotalab.com" target="_blank" rel="noopener">
-                    JOTALAB
-                  </a>
+              <div className="work-meta">
+                <div>
+                  <div className="work-name" style={{ opacity: 0.35 }}>
+                    TU NEGOCIO
+                  </div>
+                  <div className="work-cat">Próximamente</div>
                 </div>
-                <div className="work-cat">Sistema de turnos y gestión integral</div>
+                <div className="work-year">—</div>
               </div>
-              <div className="work-year">2025</div>
             </div>
-            <a
-              href="https://jjotalab.com"
-              target="_blank"
-              rel="noopener"
-              className="work-all-link"
-              style={{ display: 'inline-block', marginTop: 12 }}
-            >
-              Ver demo →
-            </a>
-          </div>
-
-          <div className="work-card work-card--placeholder">
-            <div
-              className="work-thumb"
-              style={{ background: '#1a1714', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#a39989' }}>
-                ¿El próximo?
-              </span>
-            </div>
-            <div className="work-meta">
-              <div>
-                <div className="work-name" style={{ opacity: 0.35 }}>
-                  TU NEGOCIO
-                </div>
-                <div className="work-cat">Próximamente</div>
-              </div>
-              <div className="work-year">—</div>
-            </div>
-          </div>
-
-          <div className="work-card work-card--placeholder">
-            <div
-              className="work-thumb"
-              style={{ background: '#1a1714', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#a39989' }}>
-                ¿El próximo?
-              </span>
-            </div>
-            <div className="work-meta">
-              <div>
-                <div className="work-name" style={{ opacity: 0.35 }}>
-                  TU NEGOCIO
-                </div>
-                <div className="work-cat">Próximamente</div>
-              </div>
-              <div className="work-year">—</div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -435,39 +352,28 @@ export default function Home() {
       <section className="section" id="nosotros">
         <div className="about-inner">
           <div>
-            <div className="kicker about-kicker">◆ nosotros</div>
+            <div className="kicker about-kicker">{c.about.kicker}</div>
             <h2 className="title about-headline">
-              Estudio chico,
+              {c.about.headlinePre}
               <br />
-              ambición <em>grande</em>.
+              {c.about.headlineMid}
+              <em>{c.about.headlineEm}</em>
+              {c.about.headlinePost}
             </h2>
-            <p className="about-body">
-              Forjo es un estudio independiente: tomamos pocos proyectos por mes para meternos a
-              fondo en cada uno. Código a medida, sin plantillas.
-            </p>
-            <p className="about-body">
-              Sin cajas negras ni intermediarios: sabés exactamente qué se construye y por qué.
-              Hablás siempre con la persona que está al frente de tu proyecto.
-            </p>
+            {c.about.body.map((p, i) => (
+              <p key={i} className="about-body">
+                {p}
+              </p>
+            ))}
           </div>
 
           <div className="stats-list">
-            <div className="stat-row">
-              <div className="stat-key">1</div>
-              <div className="stat-val">primer producto lanzado</div>
-            </div>
-            <div className="stat-row">
-              <div className="stat-key">100%</div>
-              <div className="stat-val">código propio, sin templates</div>
-            </div>
-            <div className="stat-row">
-              <div className="stat-key">72 hs</div>
-              <div className="stat-val">tiempo promedio de entrega de landing</div>
-            </div>
-            <div className="stat-row">
-              <div className="stat-key">1</div>
-              <div className="stat-val">punto de contacto, siempre hablás con quien construye</div>
-            </div>
+            {c.about.stats.map((st, i) => (
+              <div key={i} className="stat-row">
+                <div className="stat-key">{st.key}</div>
+                <div className="stat-val">{st.val}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -476,33 +382,26 @@ export default function Home() {
       <section className="contact" id="contacto">
         <div className="contact-inner">
           <div>
-            <div className="contact-kicker">◆ hablemos</div>
+            <div className="contact-kicker">{c.contact.kicker}</div>
             <h2 className="contact-headline">
-              ¿Tenés una idea?
+              {c.contact.headline1}
               <br />
-              Vamos a forjarla.
+              {c.contact.headline2}
             </h2>
-            <p className="contact-sub">
-              Contanos en un par de líneas qué tenés en mente. Te respondemos en menos de 24hs con
-              una primera idea y un plan.
-            </p>
+            <p className="contact-sub">{c.contact.sub}</p>
           </div>
 
           <div className="contact-box">
-            <div className="contact-box-label">◇ contacto directo</div>
+            <div className="contact-box-label">{c.contact.boxLabel}</div>
             <div className="contact-links">
-              <a href="mailto:hola@forjo.studio" className="contact-email">
-                hola@forjo.studio
+              <a href={`mailto:${c.contact.email}`} className="contact-email">
+                {c.contact.email}
               </a>
-              <a
-                href="https://wa.me/5493487623630?text=Hola%20Forjo%2C%20quiero%20saber%20más%20sobre%20sus%20servicios"
-                target="_blank"
-                className="contact-link-row"
-              >
-                WhatsApp · +54 9 3487 62-3630 →
+              <a href={c.contact.whatsappHref} target="_blank" className="contact-link-row">
+                {c.contact.whatsappLabel}
               </a>
-              <a href="#" className="contact-link-row">
-                Agendar una llamada →
+              <a href={c.contact.callHref} className="contact-link-row">
+                {c.contact.callLabel}
               </a>
             </div>
           </div>
@@ -519,44 +418,35 @@ export default function Home() {
                 forjo <span>/ studio</span>
               </span>
             </a>
-            <p>Estudio web independiente. Diseño y desarrollo a medida.</p>
+            <p>{c.footer.brandText}</p>
           </div>
 
-          <div className="footer-col">
-            <div className="footer-col-title">Estudio</div>
-            <a href="#servicios">Servicios</a>
-            <a href="#proceso">Proceso</a>
-            <a href="#trabajo">Trabajo</a>
-            <a href="#nosotros">Nosotros</a>
-          </div>
-
-          <div className="footer-col">
-            <div className="footer-col-title">Recursos</div>
-            <a href="#">Blog</a>
-            <a href="#">Guías</a>
-            <a href="#">Cotizador</a>
-            <a href="#">Preguntas frecuentes</a>
-          </div>
-
-          <div className="footer-col">
-            <div className="footer-col-title">Contacto</div>
-            <a href="mailto:hola@forjo.studio">hola@forjo.studio</a>
-            <a href="https://wa.me/5493487623630" target="_blank">
-              WhatsApp
-            </a>
-            <a href="https://www.instagram.com/forjo.studio" target="_blank" rel="noopener">
-              Instagram
-            </a>
-          </div>
+          {c.footer.cols.map((col, i) => (
+            <div key={i} className="footer-col">
+              <div className="footer-col-title">{col.title}</div>
+              {col.links.map((l, j) => {
+                const external = /^https?:\/\//.test(l.href)
+                return (
+                  <a
+                    key={j}
+                    href={l.href}
+                    {...(external ? { target: '_blank', rel: 'noopener' } : {})}
+                  >
+                    {l.label}
+                  </a>
+                )
+              })}
+            </div>
+          ))}
         </div>
 
         <div className="footer-bottom">
-          <span>© 2026 Forjo Studio · todos los derechos reservados</span>
+          <span>{c.footer.copyright}</span>
           <div className="footer-legal">
             <a href="/privacidad.html">Privacidad</a>
             <a href="/terminos.html">Términos</a>
           </div>
-          <span>v1.0 · forjo.studio</span>
+          <span>{c.footer.version}</span>
         </div>
       </footer>
 

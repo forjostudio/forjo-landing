@@ -36,30 +36,8 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-touch-icon.png',
   },
-  openGraph: {
-    type: 'website',
-    title: 'Sitios web y sistemas a medida',
-    description:
-      'Estudio web independiente en Buenos Aires. Sistema de turnos, webs profesionales y software a medida.',
-    url: 'https://forjo.studio/',
-    siteName: 'Forjo Studio',
-    locale: 'es_AR',
-    images: [
-      {
-        url: 'https://forjo.studio/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Forjo Studio — estudio web independiente',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Sitios web y sistemas a medida',
-    description:
-      'Estudio web independiente en Buenos Aires. Sistema de turnos, webs profesionales y software a medida.',
-    images: ['https://forjo.studio/og-image.jpg'],
-  },
+  // title/description + Open Graph/Twitter los define la página desde el
+  // contenido editable (app/page.tsx → generateMetadata).
 }
 
 const JSONLD = {
