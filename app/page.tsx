@@ -12,7 +12,8 @@ function Seg({ seg }: { seg: StyledSeg }) {
   if (seg.color) style.color = seg.color
   if (seg.bold) style.fontWeight = 700
   if (seg.underline) style.textDecoration = 'underline'
-  const hasStyle = Boolean(seg.color || seg.bold || seg.underline)
+  if (seg.size) style.fontSize = `${seg.size}em`
+  const hasStyle = Boolean(seg.color || seg.bold || seg.underline || seg.size)
   if (seg.italic) return <em style={hasStyle ? style : undefined}>{seg.text}</em>
   return hasStyle ? <span style={style}>{seg.text}</span> : <>{seg.text}</>
 }

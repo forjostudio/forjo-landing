@@ -36,7 +36,7 @@ const LABELS: Record<string, string> = {
 const label = (k: string) => LABELS[k] ?? k
 const singular = (k: string) => (k.endsWith('s') ? k.slice(0, -1) : k)
 
-const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline']
+const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline', 'size']
 function isStyledSeg(v: unknown): v is StyledSeg {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return false
   const o = v as Record<string, unknown>
@@ -69,6 +69,12 @@ function StyledTextField({
   onChange: (v: StyledSeg) => void
 }) {
   const set = (patch: Partial<StyledSeg>) => onChange({ ...value, ...patch })
+  const stepSize = (delta: number) => {
+    const cur = value.size ?? 1
+    let next = Math.round((cur + delta) * 10) / 10
+    next = Math.min(2.5, Math.max(0.5, next))
+    set({ size: next === 1 ? undefined : next })
+  }
   return (
     <div className="adm-field">
       <span className="adm-label">{label(k)}</span>
@@ -117,6 +123,15 @@ function StyledTextField({
               style={{ background: p.value }}
             />
           ))}
+        </span>
+        <span className="adm-size">
+          <button type="button" className="adm-fmt" onClick={() => stepSize(-0.1)} title="Más chico">
+            A−
+          </button>
+          <span className="adm-size-val">{Math.round((value.size ?? 1) * 100)}%</span>
+          <button type="button" className="adm-fmt" onClick={() => stepSize(0.1)} title="Más grande">
+            A+
+          </button>
         </span>
       </div>
     </div>

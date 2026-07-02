@@ -13,6 +13,7 @@ export interface StyledSeg {
   bold?: boolean
   italic?: boolean
   underline?: boolean
+  size?: number // factor em relativo al título (1 = default). Ej: 1.2 = 20% más grande
 }
 
 /** Paleta de la marca (colores preseteados para los títulos). */
