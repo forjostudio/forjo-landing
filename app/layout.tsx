@@ -48,7 +48,7 @@ const JSONLD = {
       '@id': 'https://forjo.studio/#business',
       name: 'Forjo Studio',
       description:
-        'Estudio web independiente. Diseño y desarrollo a medida: sistema de turnos, webs profesionales y software a medida para emprendedores, profesionales y marcas.',
+        'Estudio web independiente. Sistema de turnos, catálogos online con pedidos por WhatsApp, tiendas en Tienda Nube, webs profesionales y software a medida para emprendedores, profesionales y marcas.',
       url: 'https://forjo.studio/',
       email: 'hola@forjo.studio',
       telephone: '+5493487623630',
@@ -69,7 +69,7 @@ const JSONLD = {
       '@id': 'https://forjo.studio/#website',
       name: 'Forjo Studio',
       url: 'https://forjo.studio/',
-      description: 'Estudio web independiente. Sitios web y sistemas de turnos a medida.',
+      description: 'Estudio web independiente. Sistemas de turnos, tiendas online y sitios web a medida.',
       inLanguage: 'es-AR',
       publisher: { '@id': 'https://forjo.studio/#business' },
     },

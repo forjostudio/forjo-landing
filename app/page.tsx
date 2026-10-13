@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react'
 import { ScrollFX } from '@/components/ScrollFX'
 import { ContactForm } from '@/components/ContactForm'
 import { getContent } from '@/lib/content/get'
-import type { StyledSeg } from '@/lib/content/schema'
+import type { ServiceItem, StyledSeg } from '@/lib/content/schema'
 
 /** Segmento de título con formato. Sin estilo e sin itálica, se renderiza como
  *  texto crudo (idéntico al original). */
@@ -16,6 +16,137 @@ function Seg({ seg }: { seg: StyledSeg }) {
   const hasStyle = Boolean(seg.color || seg.bold || seg.underline || seg.size)
   if (seg.italic) return <em style={hasStyle ? style : undefined}>{seg.text}</em>
   return hasStyle ? <span style={style}>{seg.text}</span> : <>{seg.text}</>
+}
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/** Grilla de 2 columnas: una tarjeta angosta que quedaría sola en su fila
+ *  (seguida de una ancha, o última) se estira para no dejar un hueco. */
+function layoutServices(items: ServiceItem[]) {
+  const out: { item: ServiceItem; wide: boolean }[] = []
+  let col = 0
+  items.forEach((item, i) => {
+    if (item.wide) {
+      out.push({ item, wide: true })
+      col = 0
+      return
+    }
+    const next = items[i + 1]
+    const alone = col === 0 && (!next || next.wide)
+    out.push({ item, wide: alone })
+    col = alone ? 0 : (col + 1) % 2
+  })
+  return out
+}
+
+function ServiceCard({
+  item,
+  n,
+  total,
+  wide,
+}: {
+  item: ServiceItem
+  n: number
+  total: number
+  wide: boolean
+}) {
+  const hasPlans = item.plans.length > 0
+  return (
+    <div className={`serv-card${wide ? ' serv-card--wide' : ''}`}>
+      <div className="serv-index">
+        {pad(n)} / {pad(total)}
+        {item.kicker && ` · ${item.kicker}`}
+      </div>
+      <h3 className="title serv-title" style={{ whiteSpace: 'pre-line' }}>
+        {item.title}
+      </h3>
+      <p className="serv-desc">{item.desc}</p>
+      {item.tags.length > 0 && (
+        <div className="serv-tags" style={{ marginBottom: hasPlans ? 32 : 24 }}>
+          {item.tags.map((t, i) => (
+            <span key={i} className="serv-tag">
+              {t}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {hasPlans && (
+        <div className={`plans-grid${item.plans.length === 2 ? ' plans-grid--2' : ''}`}>
+          {item.plans.map((p, i) => (
+            <div key={i} className={`plan-card${p.featured ? ' plan-card--featured' : ''}`}>
+              <div className="plan-name">{p.name}</div>
+              {p.priceOld && <s className="plan-price-old">{p.priceOld}</s>}
+              <div className="plan-price">
+                {p.price}
+                <span>{p.unit}</span>
+              </div>
+              {p.setup && <div className="plan-setup">{p.setup}</div>}
+              {p.badge && <div className="plan-badge">{p.badge}</div>}
+              <ul className="plan-features">
+                {p.features.map((f, j) => (
+                  <li key={j}>{f}</li>
+                ))}
+              </ul>
+              {p.ctaLabel && (
+                <a className="btn btn--primary btn--sm plan-cta" href={p.ctaHref}>
+                  {p.ctaLabel}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {item.note && <p className="plans-note">{item.note}</p>}
+      {item.included.length > 0 && (
+        <div className="plans-included">
+          <span className="plans-included-label">{item.includedLabel}</span>
+          <ul className="plans-included-items">
+            {item.included.map((it, i) => (
+              <li key={i}>{it}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {item.addons.length > 0 && (
+        <div className="plans-addons">
+          <span className="plans-addons-label">{item.addonsLabel}</span>
+          <div className={`addons-grid${item.addons.length === 2 ? ' addons-grid--2' : ''}`}>
+            {item.addons.map((a, i) => (
+              <div key={i} className="addon-card">
+                <div className="addon-name">{a.name}</div>
+                <div className="addon-desc">{a.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {item.price && (
+        <div className="serv-price" style={{ marginBottom: 20 }}>
+          {item.priceOld && <s style={{ opacity: 0.5, fontWeight: 400 }}>{item.priceOld}</s>}{' '}
+          {item.price} {item.priceNote && <span>{item.priceNote}</span>}
+        </div>
+      )}
+      {item.footnote && (
+        <p className={hasPlans ? 'plans-payment' : 'serv-footnote'} style={{ whiteSpace: 'pre-line' }}>
+          {item.footnote}
+        </p>
+      )}
+      {item.ctaLabel &&
+        (hasPlans ? (
+          <div className="serv-more">
+            <a className="work-all-link" href={item.ctaHref}>
+              {item.ctaLabel}
+            </a>
+          </div>
+        ) : (
+          <a className="btn btn--sm" href={item.ctaHref}>
+            {item.ctaLabel}
+          </a>
+        ))}
+    </div>
+  )
 }
 
 // La landing lee el contenido editable de la DB en cada request.
@@ -149,106 +280,9 @@ export default async function Home() {
         </div>
 
         <div className="services-grid">
-          <div
-            className="serv-card"
-            style={{ gridColumn: '1 / -1', borderRight: 'none', borderBottom: '1px solid var(--border)' }}
-          >
-            <div className="serv-index">{s.turnos.index}</div>
-            <h3 className="title serv-title">
-              {s.turnos.titleLine1}
-              <br />
-              {s.turnos.titleLine2}
-            </h3>
-            <p className="serv-desc">{s.turnos.desc}</p>
-            <div className="serv-tags" style={{ marginBottom: 32 }}>
-              {s.turnos.tags.map((t, i) => (
-                <span key={i} className="serv-tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div className="plans-grid">
-              {s.turnos.plans.map((p, i) => (
-                <div key={i} className={`plan-card${p.featured ? ' plan-card--featured' : ''}`}>
-                  <div className="plan-name">{p.name}</div>
-                  <div className="plan-price">
-                    {p.price}
-                    <span>{p.unit}</span>
-                  </div>
-                  {p.badge && <div className="plan-badge">{p.badge}</div>}
-                  <ul className="plan-features">
-                    {p.features.map((f, j) => (
-                      <li key={j}>{f}</li>
-                    ))}
-                  </ul>
-                  <a className="btn btn--primary btn--sm plan-cta" href={p.ctaHref}>
-                    {p.ctaLabel}
-                  </a>
-                </div>
-              ))}
-            </div>
-            <p className="plans-note">{s.turnos.note}</p>
-            <div className="plans-included">
-              <span className="plans-included-label">{s.turnos.includedLabel}</span>
-              <ul className="plans-included-items">
-                {s.turnos.included.map((it, i) => (
-                  <li key={i}>{it}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="plans-addons">
-              <span className="plans-addons-label">{s.turnos.addonsLabel}</span>
-              <div className="addons-grid">
-                {s.turnos.addons.map((a, i) => (
-                  <div key={i} className="addon-card">
-                    <div className="addon-name">{a.name}</div>
-                    <div className="addon-desc">{a.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="plans-payment">
-              {s.turnos.paymentPre}
-              <strong>{s.turnos.paymentStrong}</strong>
-              {s.turnos.paymentPost}
-              <br />
-              {s.turnos.paymentLine2}
-            </div>
-          </div>
-
-          <div className="serv-card" style={{ borderRight: '1px solid var(--border)', borderBottom: 'none' }}>
-            <div className="serv-index">{s.web.index}</div>
-            <h3 className="title serv-title">{s.web.title}</h3>
-            <p className="serv-desc">{s.web.desc}</p>
-            <div className="serv-tags" style={{ marginBottom: 24 }}>
-              {s.web.tags.map((t, i) => (
-                <span key={i} className="serv-tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div className="serv-price" style={{ marginBottom: 20 }}>
-              <s style={{ opacity: 0.5, fontWeight: 400 }}>{s.web.priceOld}</s> {s.web.price}{' '}
-              <span>{s.web.priceNote}</span>
-            </div>
-            <a className="btn btn--sm" href={s.web.ctaHref}>
-              {s.web.ctaLabel}
-            </a>
-          </div>
-
-          <div className="serv-card" style={{ borderRight: 'none', borderBottom: 'none' }}>
-            <div className="serv-index">{s.software.index}</div>
-            <h3 className="title serv-title">{s.software.title}</h3>
-            <p className="serv-desc">{s.software.desc}</p>
-            <div className="serv-tags" style={{ marginBottom: 24 }}>
-              {s.software.tags.map((t, i) => (
-                <span key={i} className="serv-tag">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div className="serv-price">{s.software.price}</div>
-          </div>
+          {layoutServices(s.items).map(({ item, wide }, i) => (
+            <ServiceCard key={i} item={item} n={i + 1} total={s.items.length} wide={wide} />
+          ))}
         </div>
       </section>
 

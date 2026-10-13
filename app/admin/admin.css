@@ -249,6 +249,9 @@ textarea.adm-input { resize: vertical; min-height: 44px; line-height: 1.5; }
   transition: border-color 0.15s, color 0.15s;
 }
 .adm-item-head button:hover { border-color: var(--accent); color: var(--accent); }
+.adm-item-head button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.adm-item-head button:disabled { opacity: 0.35; cursor: default; border-color: var(--border); color: var(--ink); }
+.adm-item-actions { display: flex; gap: 6px; }
 .adm-add { align-self: flex-start; }
 .adm-add:hover { border-color: var(--accent); }
 

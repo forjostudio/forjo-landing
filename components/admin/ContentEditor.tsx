@@ -11,8 +11,9 @@ const IMAGE_KEYS = new Set(['thumb', 'ogImage'])
 // Labels en español para las claves del contenido (fallback: la clave cruda).
 const LABELS: Record<string, string> = {
   seo: 'SEO', nav: 'Navegación', hero: 'Portada', marquee: 'Marquesina',
-  services: 'Servicios', turnos: 'Sistema de turnos', web: 'Sitios web',
-  software: 'Software', process: 'Proceso', work: 'Trabajo', about: 'Nosotros',
+  services: 'Servicios', items: 'Productos y servicios', item: 'Servicio',
+  wide: 'Ancho completo', footnote: 'Letra chica al pie', priceOld: 'Precio tachado',
+  priceNote: 'Nota del precio', setup: 'Línea bajo el precio', process: 'Proceso', work: 'Trabajo', about: 'Nosotros',
   contact: 'Contacto', footer: 'Footer', plans: 'Planes', features: 'Características',
   tags: 'Etiquetas', included: 'Incluye', addons: 'Add-ons', steps: 'Pasos',
   projects: 'Proyectos', stats: 'Números', cols: 'Columnas', links: 'Enlaces',
@@ -246,6 +247,11 @@ function ArrayItems({
 }) {
   const isStr = value.length === 0 || typeof value[0] === 'string'
   const add = () => onChange([...value, value.length ? blank(value[0]) : ''])
+  const move = (i: number, d: -1 | 1) => {
+    const next = value.slice()
+    ;[next[i], next[i + d]] = [next[i + d], next[i]]
+    onChange(next)
+  }
   return (
     <>
       {value.map((item, i) => (
@@ -254,9 +260,22 @@ function ArrayItems({
             <span>
               {label(singular(k))} {i + 1}
             </span>
-            <button type="button" onClick={() => onChange(value.filter((_, j) => j !== i))}>
-              Quitar
-            </button>
+            <span className="adm-item-actions">
+              <button type="button" onClick={() => move(i, -1)} disabled={i === 0} title="Subir">
+                ↑
+              </button>
+              <button
+                type="button"
+                onClick={() => move(i, 1)}
+                disabled={i === value.length - 1}
+                title="Bajar"
+              >
+                ↓
+              </button>
+              <button type="button" onClick={() => onChange(value.filter((_, j) => j !== i))}>
+                Quitar
+              </button>
+            </span>
           </div>
           {isStr ? (
             <input

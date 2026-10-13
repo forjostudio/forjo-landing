@@ -1,5 +1,5 @@
 import { publicClient } from '@/lib/supabase/public'
-import { DEFAULT_CONTENT, type LandingContent } from './schema'
+import { CONTENT_VERSION, DEFAULT_CONTENT, type LandingContent } from './schema'
 
 function isObj(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -43,6 +43,37 @@ function coerceStyledSegs(data: unknown): unknown {
   return out
 }
 
+// v1 → v2: servicios pasó de 3 lugares fijos (turnos/web/software) a una lista,
+// con productos y precios nuevos. Lo guardado de servicios, la marquesina y la
+// OG description quedan obsoletos: se descartan para que caigan al default. A
+// trabajos se le suma Agualaboca sin pisar los proyectos ya cargados.
+function migrate(data: unknown): unknown {
+  if (!isObj(data)) return data
+  if (typeof data.schemaVersion === 'number' && data.schemaVersion >= CONTENT_VERSION) return data
+  const out: Record<string, unknown> = { ...data, schemaVersion: CONTENT_VERSION }
+  delete out.services
+  delete out.marquee
+  if (isObj(out.seo)) {
+    const seo = { ...out.seo }
+    delete seo.ogDescription
+    out.seo = seo
+  }
+  const work = out.work
+  if (isObj(work) && Array.isArray(work.projects)) {
+    const newProject = DEFAULT_CONTENT.work.projects[0]
+    const has = work.projects.some((p) => isObj(p) && p.name === newProject.name)
+    if (!has) {
+      const ph = typeof work.placeholders === 'number' ? work.placeholders : 0
+      out.work = {
+        ...work,
+        projects: [newProject, ...work.projects],
+        placeholders: Math.max(0, ph - 1),
+      }
+    }
+  }
+  return out
+}
+
 /** Contenido de la landing: lo guardado en DB mergeado sobre el default. Si no
  *  hay fila o falla la lectura, devuelve el default (la landing se ve igual). */
 export async function getContent(): Promise<LandingContent> {
@@ -53,7 +84,7 @@ export async function getContent(): Promise<LandingContent> {
       .select('data')
       .eq('id', 'forjo')
       .maybeSingle()
-    return deepMerge(DEFAULT_CONTENT, coerceStyledSegs(data?.data))
+    return deepMerge(DEFAULT_CONTENT, migrate(coerceStyledSegs(data?.data)))
   } catch {
     return DEFAULT_CONTENT
   }

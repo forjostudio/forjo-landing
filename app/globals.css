@@ -229,21 +229,33 @@ nav {
 /* ================================================================
    SERVICES
 ================================================================ */
+/* Las líneas entre tarjetas son el fondo de la grilla asomando por el gap:
+   funcionan con cualquier cantidad y combinación de tarjetas. */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0;
+  gap: 1px;
+  background: var(--border);
   border: 1px solid var(--border);
 }
 .serv-card {
   padding: 40px;
   background: var(--surface);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
   position: relative;
 }
-.serv-card:nth-child(even) { border-right: none; }
-.serv-card:nth-last-child(-n+2) { border-bottom: none; }
+.serv-card--wide { grid-column: 1 / -1; }
+.serv-footnote {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.serv-more {
+  margin-top: 24px;
+  text-align: center;
+}
 
 .serv-index {
   font-family: var(--font-mono);
@@ -667,9 +679,7 @@ footer {
   footer { padding: 48px 24px 32px; }
 
   .services-grid { grid-template-columns: 1fr; }
-  .serv-card { border-right: none; }
-  .serv-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
-  .serv-card:last-child { border-bottom: none; }
+  .serv-card { padding: 32px 24px; }
   .serv-cta { border-bottom: none; }
 
   .process-grid { grid-template-columns: 1fr 1fr; }
@@ -692,6 +702,11 @@ footer {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+}
+.plans-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  margin: 0 auto;
 }
 .plan-card {
   padding: 24px;
@@ -717,6 +732,12 @@ footer {
   letter-spacing: -0.04em;
   color: var(--ink);
   line-height: 1;
+}
+.plan-price-old {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: -6px;
 }
 .plan-price span {
   font-size: 14px;
@@ -837,6 +858,11 @@ footer {
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   text-align: left;
+}
+.addons-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  margin: 0 auto;
 }
 .addon-card {
   border: 1px solid var(--border);
