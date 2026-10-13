@@ -53,6 +53,7 @@ export function ScrollFX() {
       const match = raw.match(/^(\d+)(.*)$/)
       if (!match) return
       const target = parseInt(match[1], 10)
+      if (match[1].length === 4 && !match[2]) return // un año (2025) no se cuenta desde 0
       const suffix = match[2]
       const dur = 1100
       let start: number | null = null

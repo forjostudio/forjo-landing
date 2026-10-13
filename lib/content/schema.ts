@@ -87,7 +87,7 @@ export interface FooterCol {
 
 /** Versión de la forma del contenido. Si lo guardado en DB es de una versión
  *  anterior, lib/content/get.ts lo migra (ver migrate). */
-export const CONTENT_VERSION = 2
+export const CONTENT_VERSION = 3
 
 export interface LandingContent {
   schemaVersion: number
@@ -180,7 +180,6 @@ export const DEFAULT_CONTENT: LandingContent = {
       { label: 'Proceso', href: '#proceso' },
       { label: 'Trabajo', href: '#trabajo' },
       { label: 'Nosotros', href: '#nosotros' },
-      { label: 'Ingresar', href: 'https://gestion.forjo.studio/login' },
     ],
     ctaLabel: 'Contacto',
     ctaHref: '#contacto',
@@ -536,19 +535,19 @@ export const DEFAULT_CONTENT: LandingContent = {
   },
   about: {
     kicker: '◆ nosotros',
-    headlinePre: { text: 'Estudio chico,' },
-    headlineMid: { text: 'ambición ' },
-    headlineEm: { text: 'grande', italic: true, color: '#d94a2b' },
+    headlinePre: { text: 'Hablás con' },
+    headlineMid: { text: 'quien lo ' },
+    headlineEm: { text: 'construye', italic: true, color: '#d94a2b' },
     headlinePost: { text: '.' },
     body: [
-      'Forjo es un estudio independiente: tomamos pocos proyectos por mes para meternos a fondo en cada uno. Código a medida, sin plantillas.',
-      'Sin cajas negras ni intermediarios: sabés exactamente qué se construye y por qué. Hablás siempre con la persona que está al frente de tu proyecto.',
+      'Forjo es un estudio chico de Buenos Aires. Arrancamos en 2025 con un sistema de turnos y hoy también armamos tiendas, catálogos y webs para negocios que quieren dejar de hacer a mano lo que se puede automatizar.',
+      'Tomamos pocos proyectos a la vez para poder seguirlos de cerca. Nos escribís por WhatsApp y te contesta la misma persona que después hace el diseño y el código. Si algo no te conviene, te lo decimos.',
     ],
     stats: [
-      { key: '1', val: 'primer producto lanzado' },
-      { key: '100%', val: 'código propio, sin templates' },
-      { key: '72 hs', val: 'tiempo promedio de entrega de landing' },
-      { key: '1', val: 'punto de contacto, siempre hablás con quien construye' },
+      { key: '2025', val: 'el año en que arrancamos' },
+      { key: '2', val: 'productos propios: Forjo Gestión y Forjo Tiendas' },
+      { key: '72 hs', val: 'lo que tardamos en promedio en entregar una web' },
+      { key: '0%', val: 'de comisión sobre lo que vendés en tu tienda' },
     ],
   },
   contact: {
@@ -580,10 +579,8 @@ export const DEFAULT_CONTENT: LandingContent = {
       {
         title: 'Recursos',
         links: [
-          { label: 'Blog', href: '#' },
-          { label: 'Guías', href: '#' },
-          { label: 'Cotizador', href: '#' },
-          { label: 'Preguntas frecuentes', href: '#' },
+          { label: 'Forjo Gestión', href: 'https://gestion.forjo.studio' },
+          { label: 'Forjo Tiendas', href: 'https://tiendas.forjo.studio' },
         ],
       },
       {

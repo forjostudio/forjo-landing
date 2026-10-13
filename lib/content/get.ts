@@ -43,33 +43,65 @@ function coerceStyledSegs(data: unknown): unknown {
   return out
 }
 
-// v1 → v2: servicios pasó de 3 lugares fijos (turnos/web/software) a una lista,
-// con productos y precios nuevos. Lo guardado de servicios, la marquesina y la
-// OG description quedan obsoletos: se descartan para que caigan al default. A
-// trabajos se le suma Agualaboca sin pisar los proyectos ya cargados.
+/** Lleva lo guardado en DB a la versión actual, paso por paso. */
 function migrate(data: unknown): unknown {
   if (!isObj(data)) return data
-  if (typeof data.schemaVersion === 'number' && data.schemaVersion >= CONTENT_VERSION) return data
+  const from = typeof data.schemaVersion === 'number' ? data.schemaVersion : 1
+  if (from >= CONTENT_VERSION) return data
   const out: Record<string, unknown> = { ...data, schemaVersion: CONTENT_VERSION }
-  delete out.services
-  delete out.marquee
-  if (isObj(out.seo)) {
-    const seo = { ...out.seo }
-    delete seo.ogDescription
-    out.seo = seo
-  }
-  const work = out.work
-  if (isObj(work) && Array.isArray(work.projects)) {
-    const newProject = DEFAULT_CONTENT.work.projects[0]
-    const has = work.projects.some((p) => isObj(p) && p.name === newProject.name)
-    if (!has) {
-      const ph = typeof work.placeholders === 'number' ? work.placeholders : 0
-      out.work = {
-        ...work,
-        projects: [newProject, ...work.projects],
-        placeholders: Math.max(0, ph - 1),
+
+  // v1 → v2: servicios pasó de 3 lugares fijos (turnos/web/software) a una lista,
+  // con productos y precios nuevos. Lo guardado de servicios, la marquesina y la
+  // OG description quedan obsoletos: se descartan para que caigan al default. A
+  // trabajos se le suma Agualaboca sin pisar los proyectos ya cargados.
+  if (from < 2) {
+    delete out.services
+    delete out.marquee
+    if (isObj(out.seo)) {
+      const seo = { ...out.seo }
+      delete seo.ogDescription
+      out.seo = seo
+    }
+    const work = out.work
+    if (isObj(work) && Array.isArray(work.projects)) {
+      const newProject = DEFAULT_CONTENT.work.projects[0]
+      const has = work.projects.some((p) => isObj(p) && p.name === newProject.name)
+      if (!has) {
+        const ph = typeof work.placeholders === 'number' ? work.placeholders : 0
+        out.work = {
+          ...work,
+          projects: [newProject, ...work.projects],
+          placeholders: Math.max(0, ph - 1),
+        }
       }
     }
+  }
+
+  // v2 → v3: sale "Ingresar" (login de gestión) del menú, sin tocar el resto de
+  // los links, y Nosotros se reescribe: lo guardado cae al default nuevo. En el
+  // footer, la columna Recursos pasa a linkear a los productos (Blog, Guías,
+  // Cotizador y FAQ no tenían nada detrás).
+  if (from < 3) {
+    const footer = out.footer
+    if (isObj(footer) && Array.isArray(footer.cols)) {
+      const recursos = DEFAULT_CONTENT.footer.cols.find((c) => c.title === 'Recursos')
+      out.footer = {
+        ...footer,
+        cols: footer.cols.map((c) =>
+          isObj(c) && c.title === 'Recursos' && recursos ? { ...c, links: recursos.links } : c,
+        ),
+      }
+    }
+    const nav = out.nav
+    if (isObj(nav) && Array.isArray(nav.links)) {
+      out.nav = {
+        ...nav,
+        links: nav.links.filter(
+          (l) => !(isObj(l) && typeof l.href === 'string' && l.href.includes('gestion.forjo.studio/login')),
+        ),
+      }
+    }
+    delete out.about
   }
   return out
 }
