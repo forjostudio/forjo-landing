@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { CSSProperties } from 'react'
+import Image from 'next/image'
 import { ScrollFX } from '@/components/ScrollFX'
 import { ContactForm } from '@/components/ContactForm'
 import { getContent } from '@/lib/content/get'
@@ -338,15 +339,16 @@ export default async function Home() {
                 className="work-thumb-link"
                 aria-label={`Ver ${p.name}`}
               >
-                <div
-                  className="work-thumb"
-                  style={{
-                    backgroundImage: `url('${p.thumb}')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'left center',
-                  }}
-                >
-                  <div className="work-thumb-bg" style={{ display: 'none' }}></div>
+                <div className="work-thumb">
+                  {p.thumb && (
+                    <Image
+                      src={p.thumb}
+                      alt=""
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                      style={{ objectFit: 'cover', objectPosition: 'top center' }}
+                    />
+                  )}
                 </div>
               </a>
               <div className="work-meta">

@@ -397,9 +397,10 @@ nav {
   gap: 24px;
 }
 .work-card { cursor: pointer; }
+/* Proporción de una captura de navegador (~1900×900): se ve entera. */
 .work-thumb {
   position: relative;
-  height: 320px;
+  aspect-ratio: 21 / 10;
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
