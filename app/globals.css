@@ -6,6 +6,8 @@
   --border:  #332d24;
   --cream:   #f3ead8;
   --accent:  #d94a2b;
+  /* Acento para texto chico sobre fondo oscuro: el #d94a2b no llega a 4.5:1. */
+  --accent-ink: #e8694a;
   --azul:    #7aa6d6;
   --proc-bg: #0f0d0c;
 
@@ -16,7 +18,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { color-scheme: dark; accent-color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+/* Los anclas del menú no quedan tapadas por el nav fijo. */
+section[id] { scroll-margin-top: 80px; }
 body {
   background: var(--bg);
   color: var(--ink);
@@ -26,6 +33,8 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 ::selection { background: var(--accent); color: var(--cream); }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
+.contact :focus-visible { outline-color: #fbf3e3; }
 
 @keyframes marquee {
   from { transform: translateX(0); }
@@ -77,6 +86,7 @@ a { color: inherit; text-decoration: none; }
   transition: transform 0.15s ease;
 }
 .btn:hover { transform: translateY(-1px); }
+.btn:active { transform: none; }
 .btn--primary {
   background: var(--ink);
   color: var(--bg);
@@ -246,7 +256,7 @@ nav {
 .serv-card--wide { grid-column: 1 / -1; }
 .serv-footnote {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   line-height: 1.6;
   color: var(--muted);
@@ -390,6 +400,13 @@ nav {
   color: var(--ink);
   border-bottom: 1px solid var(--ink);
   padding-bottom: 2px;
+  position: relative;
+}
+/* Área de toque de 44px sin mover el subrayado. */
+.work-all-link::after {
+  content: "";
+  position: absolute;
+  inset: -13px -8px;
 }
 .work-grid {
   display: grid;
@@ -536,7 +553,6 @@ nav {
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  opacity: 0.75;
   margin-bottom: 24px;
 }
 .contact-headline {
@@ -553,7 +569,6 @@ nav {
   font-family: var(--font-body);
   font-size: 19px;
   line-height: 1.55;
-  opacity: 0.85;
   max-width: 480px;
 }
 
@@ -672,14 +687,15 @@ footer {
   nav { padding: 18px 24px; }
   .nav-links a:not(.btn) { display: none; }
   .hero { padding: 48px 24px 64px; }
-  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .hero-headline { font-size: clamp(44px, 14.5vw, 72px); }
   .hero-visual { display: none; }
   .section { padding: 64px 24px; }
   .process { padding: 64px 24px; }
   .contact { padding: 64px 24px; }
   footer { padding: 48px 24px 32px; }
 
-  .services-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: minmax(0, 1fr); }
   .serv-card { padding: 32px 24px; }
   .serv-cta { border-bottom: none; }
 
@@ -689,6 +705,14 @@ footer {
   .contact-inner { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+
+  /* Áreas de toque de 44px en celular. */
+  .footer-col-title { margin-bottom: 4px; }
+  .footer-col a { padding: 13px 0; margin-bottom: 0; }
+  .footer-legal a { display: inline-block; padding: 15px 0; }
+  .contact-links { gap: 4px; }
+  .contact-email { margin-bottom: 8px; padding-top: 8px; }
+  .contact-link-row { padding: 13px 0; }
 }
 
 @media (max-width: 480px) {
@@ -725,7 +749,7 @@ footer {
   text-transform: uppercase;
   color: var(--muted);
 }
-.plan-card--featured .plan-name { color: var(--accent); }
+.plan-card--featured .plan-name { color: var(--accent-ink); }
 .plan-price {
   font-family: var(--font-display);
   font-size: 32px;
@@ -772,7 +796,7 @@ footer {
 }
 .plan-features li {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   padding-left: 14px;
   position: relative;
@@ -799,7 +823,7 @@ footer {
 }
 .plans-note {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--muted);
   text-align: center;
@@ -829,7 +853,7 @@ footer {
 }
 .plans-included-items li {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   padding-left: 18px;
   position: relative;
@@ -877,17 +901,17 @@ footer {
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .addon-desc {
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--muted);
 }
 .plans-payment {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--muted);
   margin-top: 24px;
@@ -930,6 +954,8 @@ footer {
 @media (max-width: 768px) {
   .plans-grid { grid-template-columns: 1fr; }
   .addons-grid { grid-template-columns: 1fr; }
+  .plan-features li,
+  .addon-desc { font-size: 15px; }
 }
 
 /* ================================================================
@@ -992,7 +1018,7 @@ footer {
   margin-top: 28px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   max-width: 480px;
 }
 .contact-form-label {
@@ -1000,14 +1026,21 @@ footer {
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  opacity: 0.85;
   margin-bottom: 4px;
+}
+.contact-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
 }
 .contact-form input,
 .contact-form textarea {
   width: 100%;
   background: rgba(15, 13, 12, 0.25);
-  border: 1px solid rgba(251, 243, 227, 0.35);
+  border: 1px solid rgba(251, 243, 227, 0.6);
   color: #fbf3e3;
   padding: 13px 15px;
   font-family: var(--font-body);
@@ -1017,7 +1050,7 @@ footer {
 }
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
-  color: rgba(251, 243, 227, 0.6);
+  color: rgba(251, 243, 227, 0.85);
 }
 .contact-form input:focus,
 .contact-form textarea:focus {
@@ -1041,6 +1074,7 @@ footer {
   transition: transform 0.15s ease;
 }
 .contact-form-btn:hover { transform: translateY(-1px); }
+.contact-form-btn:active { transform: none; }
 .contact-form-btn:disabled { opacity: 0.6; cursor: default; }
 .contact-form-note { font-family: var(--font-body); font-size: 15px; color: #fbf3e3; }
 

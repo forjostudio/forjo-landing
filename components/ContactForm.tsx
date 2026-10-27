@@ -27,7 +27,9 @@ export function ContactForm({ title }: { title: string }) {
   if (state === 'ok') {
     return (
       <div className="contact-form">
-        <p className="contact-form-note">¡Gracias! Te respondemos en menos de 24hs.</p>
+        <p className="contact-form-note" role="status">
+          ¡Gracias! Te respondemos en menos de 24hs.
+        </p>
       </div>
     )
   }
@@ -35,30 +37,33 @@ export function ContactForm({ title }: { title: string }) {
   return (
     <form className="contact-form" onSubmit={onSubmit}>
       <div className="contact-form-label">{title}</div>
-      <input
-        placeholder="Tu nombre"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        autoComplete="name"
-      />
-      <input
-        type="email"
-        placeholder="Tu email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        autoComplete="email"
-      />
-      <textarea
-        placeholder="Contanos en un par de líneas qué tenés en mente…"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        required
-      />
+      <label className="contact-form-field">
+        Tu nombre
+        <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+      </label>
+      <label className="contact-form-field">
+        Tu email
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+        />
+      </label>
+      <label className="contact-form-field">
+        Tu mensaje
+        <textarea
+          placeholder="Contanos en un par de líneas qué tenés en mente…"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          required
+        />
+      </label>
       <button className="contact-form-btn" disabled={state === 'sending'}>
         {state === 'sending' ? 'Enviando…' : 'Enviar mensaje →'}
       </button>
       {state === 'error' && (
-        <p className="contact-form-note">
+        <p className="contact-form-note" role="alert">
           Hubo un error. Probá de nuevo o escribinos por WhatsApp.
         </p>
       )}
