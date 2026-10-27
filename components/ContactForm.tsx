@@ -28,7 +28,7 @@ export function ContactForm({ title }: { title: string }) {
     return (
       <div className="contact-form">
         <p className="contact-form-note" role="status">
-          ¡Gracias! Te respondemos en menos de 24hs.
+          Gracias! Te respondemos en menos de 24hs.
         </p>
       </div>
     )

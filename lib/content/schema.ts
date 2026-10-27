@@ -87,7 +87,7 @@ export interface FooterCol {
 
 /** Versión de la forma del contenido. Si lo guardado en DB es de una versión
  *  anterior, lib/content/get.ts lo migra (ver migrate). */
-export const CONTENT_VERSION = 3
+export const CONTENT_VERSION = 4
 
 /** Secciones que se pueden ocultar desde el editor, con el ancla que les
  *  apuntan el menú y el footer: al ocultar una, esos links también salen.
@@ -565,7 +565,7 @@ export const DEFAULT_CONTENT: LandingContent = {
   },
   contact: {
     kicker: '◆ hablemos',
-    headline1: { text: '¿Tenés una idea?' },
+    headline1: { text: 'Tenés una idea?' },
     headline2: { text: 'Vamos a forjarla.' },
     sub: 'Contanos en un par de líneas qué tenés en mente. Te respondemos en menos de 24hs con una primera idea y un plan.',
     boxLabel: '◇ contacto directo',

@@ -364,7 +364,7 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
                   style={{ background: '#1a1714', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#a39989' }}>
-                    ¿El próximo?
+                    El próximo?
                   </span>
                 </div>
                 <div className="work-meta">

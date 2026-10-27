@@ -8,6 +8,8 @@
   --accent:  #d94a2b;
   /* Acento para texto chico sobre fondo oscuro: el #d94a2b no llega a 4.5:1. */
   --accent-ink: #e8694a;
+  /* Acento oscurecido para fondos con texto crema encima (4.9:1). */
+  --accent-deep: #bd3d1e;
   --azul:    #7aa6d6;
   --proc-bg: #0f0d0c;
 
@@ -538,7 +540,7 @@ nav {
 ================================================================ */
 .contact {
   padding: 112px 56px;
-  background: var(--accent);
+  background: var(--accent-deep);
   color: #fbf3e3;
   border-bottom: 1px solid var(--border);
 }

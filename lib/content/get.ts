@@ -43,6 +43,16 @@ function coerceStyledSegs(data: unknown): unknown {
   return out
 }
 
+// "¿" y "¡" de apertura al inicio de una oración (no en el medio: "y ¿qué?" queda).
+const OPENING_MARK = /(^|[.!?…]\s+|\n\s*)[¿¡]/g
+
+function stripOpeningMarks(v: unknown): unknown {
+  if (typeof v === 'string') return v.replace(OPENING_MARK, '$1')
+  if (Array.isArray(v)) return v.map(stripOpeningMarks)
+  if (isObj(v)) return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, stripOpeningMarks(x)]))
+  return v
+}
+
 /** Lleva lo guardado en DB a la versión actual, paso por paso. */
 function migrate(data: unknown): unknown {
   if (!isObj(data)) return data
@@ -103,6 +113,9 @@ function migrate(data: unknown): unknown {
     }
     delete out.about
   }
+
+  // v3 → v4: la web va sin "¿" ni "¡" de apertura cuando arrancan la oración.
+  if (from < 4) return stripOpeningMarks(out)
   return out
 }
 
