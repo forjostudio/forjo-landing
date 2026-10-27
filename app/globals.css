@@ -1043,3 +1043,10 @@ footer {
 .contact-form-btn:hover { transform: translateY(-1px); }
 .contact-form-btn:disabled { opacity: 0.6; cursor: default; }
 .contact-form-note { font-family: var(--font-body); font-size: 15px; color: #fbf3e3; }
+
+/* Editor del panel: la sección que se abrió se marca un momento en la vista
+   previa (outline adentro: no mueve el layout). */
+[data-editor-focus] {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}

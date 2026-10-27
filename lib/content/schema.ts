@@ -89,8 +89,20 @@ export interface FooterCol {
  *  anterior, lib/content/get.ts lo migra (ver migrate). */
 export const CONTENT_VERSION = 3
 
+/** Secciones que se pueden ocultar desde el editor, con el ancla que les
+ *  apuntan el menú y el footer: al ocultar una, esos links también salen.
+ *  Portada, Contacto, menú y footer no se ocultan (los CTA llevan a Contacto). */
+export const HIDEABLE: Record<string, string> = {
+  marquee: '',
+  services: '#servicios',
+  process: '#proceso',
+  work: '#trabajo',
+  about: '#nosotros',
+}
+
 export interface LandingContent {
   schemaVersion: number
+  hidden: string[] // claves de HIDEABLE que no se muestran en la web
   seo: {
     title: string
     description: string
@@ -165,6 +177,7 @@ export interface LandingContent {
 
 export const DEFAULT_CONTENT: LandingContent = {
   schemaVersion: CONTENT_VERSION,
+  hidden: [],
   seo: {
     title: 'Forjamos tu presencia en la web. — Forjo Studio',
     description:

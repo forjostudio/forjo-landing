@@ -11,7 +11,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       <div className="adm-topbar">
         <span className="adm-brand">Forjo · Panel</span>
         <nav className="adm-nav">
-          <Link href="/admin">Contenido</Link>
+          <Link href="/admin/editar">Contenido</Link>
           <Link href="/admin/mensajes">Mensajes</Link>
           <Link href="/admin/cuenta">Cuenta</Link>
           <a href="/" target="_blank" rel="noopener">

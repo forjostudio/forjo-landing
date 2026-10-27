@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { saveContent } from '@/app/admin/actions'
 import { ImageUpload } from './ImageUpload'
-import { PALETTE, type LandingContent, type StyledSeg } from '@/lib/content/schema'
+import { PALETTE, type StyledSeg } from '@/lib/content/schema'
 
 // Campos string que son imágenes (se editan con subida a Storage).
 const IMAGE_KEYS = new Set(['thumb', 'ogImage'])
@@ -38,7 +36,7 @@ const LABELS: Record<string, string> = {
   ctaPrimaryLabel: 'CTA principal · texto', ctaPrimaryHref: 'CTA principal · link',
   ctaSecondaryLabel: 'CTA secundario · texto', ctaSecondaryHref: 'CTA secundario · link',
 }
-const label = (k: string) => LABELS[k] ?? k
+export const label = (k: string) => LABELS[k] ?? k
 const singular = (k: string) => (k.endsWith('s') ? k.slice(0, -1) : k)
 
 const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline', 'size']
@@ -316,8 +314,9 @@ function ArrayItems({
   )
 }
 
-// Cuerpo de una sección de nivel superior (sin fieldset: el título lo pone el accordion).
-function SectionBody({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
+/** Los campos de una sección de nivel superior del contenido (sin título: lo
+ *  pone el editor). Arma el formulario a partir de la forma del dato. */
+export function SectionBody({ value, onChange }: { value: unknown; onChange: (v: unknown) => void }) {
   if (Array.isArray(value)) {
     return <ArrayItems k="items" value={value} onChange={(v) => onChange(v)} />
   }
@@ -327,65 +326,4 @@ function SectionBody({ value, onChange }: { value: unknown; onChange: (v: unknow
     )
   }
   return <FieldNode k="" value={value} onChange={onChange} />
-}
-
-const ORDER = ['seo', 'nav', 'hero', 'marquee', 'services', 'process', 'work', 'about', 'contact', 'footer']
-
-export function ContentEditor({ initial }: { initial: LandingContent }) {
-  const [content, setContent] = useState<Record<string, unknown>>(
-    initial as unknown as Record<string, unknown>,
-  )
-  const [saving, setSaving] = useState(false)
-  const [msg, setMsg] = useState('')
-  const [preview, setPreview] = useState(false)
-  const [previewKey, setPreviewKey] = useState(0)
-
-  async function onSave() {
-    setSaving(true)
-    setMsg('')
-    const res = await saveContent(content as unknown as LandingContent)
-    setSaving(false)
-    if (res?.error) {
-      setMsg(`Error: ${res.error}`)
-      return
-    }
-    setMsg('Guardado ✓')
-    setPreviewKey((k) => k + 1) // refresca la vista previa con lo recién publicado
-  }
-
-  return (
-    <div className="adm-editor">
-      {ORDER.map((k, i) => (
-        <details key={k} className="adm-accordion" open={i === 0}>
-          <summary className="adm-accordion-summary">{label(k)}</summary>
-          <div className="adm-accordion-body">
-            <SectionBody
-              value={content[k]}
-              onChange={(v) => setContent({ ...content, [k]: v })}
-            />
-          </div>
-        </details>
-      ))}
-      <div className="adm-savebar">
-        <button className="adm-btn adm-btn--primary" onClick={onSave} disabled={saving}>
-          {saving ? 'Guardando…' : 'Guardar cambios'}
-        </button>
-        <button type="button" className="adm-btn" onClick={() => setPreview((v) => !v)}>
-          {preview ? 'Ocultar vista previa' : 'Vista previa'}
-        </button>
-        {msg && <span className="adm-msg">{msg}</span>}
-      </div>
-      {preview && (
-        <div className="adm-preview">
-          <div className="adm-preview-bar">
-            Vista previa (se actualiza al guardar) ·{' '}
-            <a href="/" target="_blank" rel="noopener">
-              abrir en pestaña ↗
-            </a>
-          </div>
-          <iframe key={previewKey} src={`/?v=${previewKey}`} title="Vista previa de la landing" />
-        </div>
-      )}
-    </div>
-  )
 }
