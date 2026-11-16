@@ -1,0 +1,88 @@
+/* ================================================================
+   EDITORIAL BRUTALISM — piezas compartidas por las variantes -eb
+   (prefijo eb-). Cada variante editorial tiene además su archivo.
+================================================================ */
+
+/* Guías de columna visibles (4 en celular, 12 desde 1024). Se aplican como
+   capa detrás del contenido de un bloque con position: relative. */
+.eb-guides { position: relative; isolation: isolate; }
+.eb-guides::before {
+  content: '';
+  position: absolute;
+  inset: 0 var(--eb-gx, var(--gutter));
+  z-index: -1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--eb-guide) 0 1px,
+    transparent 1px calc(100% / var(--eb-cols, 4))
+  );
+  box-shadow: inset -1px 0 0 var(--eb-guide);
+}
+@media (min-width: 1024px) {
+  .eb-guides { --eb-cols: 12; }
+}
+.bx,
+.bx .bx-inv { --eb-guide: color-mix(in srgb, var(--fg) 9%, transparent); }
+
+/* ── Titular por líneas ──────────────────────────────────────────── */
+.eb-line {
+  display: block;
+  overflow: hidden;
+  /* Aire para tildes y descendentes dentro de la máscara. */
+  padding: 0.08em 0 0.06em;
+  margin: -0.08em 0 -0.06em;
+}
+.eb-line__in { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .eb-line__in {
+    animation: eb-rise 1000ms calc(120ms + var(--i) * 110ms) var(--ease-out) both;
+  }
+}
+@keyframes eb-rise { from { transform: translateY(105%); } }
+
+/* ── Entrada de bloques con el scroll (solo donde hay scroll timelines) ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .eb-reveal {
+      animation: eb-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes eb-in {
+  from { opacity: 0; transform: translateY(32px); }
+}
+
+/* ── Subrayado que crece desde la izquierda ──────────────────────── */
+.eb-u {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 280ms var(--ease-out);
+}
+.eb-u:hover,
+.eb-u:focus-visible { background-size: 100% 2px; }
+
+/* ── Geometría del logo ──────────────────────────────────────────── */
+.eb-arm,
+.eb-trap { display: inline-block; flex-shrink: 0; vertical-align: middle; }
+
+/* ── Folio ───────────────────────────────────────────────────────── */
+.eb-folio {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px var(--s-6);
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.eb-folio > span { display: inline-flex; align-items: center; gap: 10px; }

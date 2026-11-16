@@ -18,14 +18,14 @@ forjo.studio es la landing de **Forjo Studio**, un estudio web independiente de 
 Lo que se ofrece:
 
 - **Forjo Gestión** (gestion.forjo.studio): turnos y gestión para profesionales, con seña por MercadoPago y Google Calendar. Planes mensuales por cantidad de profesionales.
-- **Forjo Tiendas** (tiendas.forjo.studio): catálogos online con pedidos por WhatsApp y sistema para gastronómicos, sin comisión por venta. Dos planes.
+- **Forjo Tiendas** (tiendas.forjo.studio): catálogos online con pedidos por WhatsApp y sistema para gastronómicos. Sin comisión en ventas en efectivo o transferencia; los pagos online tienen comisión. Dos planes.
 - **Tienda Nube:** configuración o diseño de la tienda para dejarla lista para vender.
 - **Sitios web** a medida, precio cerrado + mantenimiento mensual.
 - **Software a medida**, cotizado por proyecto.
 
 ## Positioning
 
-Estudio chico y de autor: hablás con quien construye, código a medida sin plantillas, precios publicados y presupuesto cerrado, entregas rápidas. Tiene productos propios (Gestión, Tiendas) además de servicios, y las tiendas no cobran comisión sobre las ventas.
+Estudio chico y de autor: hablás con quien construye, código a medida sin plantillas, precios publicados y presupuesto cerrado, entregas rápidas. Tiene productos propios (Gestión, Tiendas) además de servicios, y las tiendas no cobran comisión sobre las ventas en efectivo o transferencia (los pagos online sí tienen comisión; no prometer "0%" en general).
 
 ## Operating Context
 
@@ -50,7 +50,7 @@ Estudio chico y de autor: hablás con quien construye, código a medida sin plan
 ## Evidence on Hand
 
 - Casos reales en Trabajo: **AGUALABOCA** (Forjo Tiendas, `public/agualaboca.png`) y **JOTALAB** (Forjo Gestión, `public/jjotalab.png`).
-- Datos de Nosotros: arrancó en 2025, 2 productos propios, ~72 hs de entrega promedio de una web, 0% de comisión en tiendas.
+- Datos de Nosotros: arrancó en 2025, 2 productos propios, ~72 hs de entrega promedio de una web. (El dato "0% de comisión" sale de Nosotros: vale solo para efectivo o transferencia.)
 - No hay testimonios, logos de clientes, prensa ni métricas de terceros: no inventarlos.
 
 ## Product Principles

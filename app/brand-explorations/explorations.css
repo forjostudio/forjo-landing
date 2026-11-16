@@ -1,0 +1,323 @@
+/* ================================================================
+   EXPLORACIÓN VISUAL 2.0 — base compartida
+   Todo cuelga de .bx: no afecta a la landing productiva. Cada variante
+   tiene su propio archivo (variant-a/b/c.css) con prefijo propio.
+================================================================ */
+
+.bx {
+  /* Paleta oficial, exacta. */
+  --tinta: #1A1815;
+  --crema: #F0E9D8;
+  --naranja: #D94A2B;
+  --azul: #2F5CB0;
+  --amarillo: #F2C744;
+  /* Secundarios de texto del archivo oficial de tokens (forjo-tokens.css). */
+  --muted-on-light: #6B6455;
+  --muted-on-dark: #9A9384;
+
+  --f-display: var(--font-bricolage), 'Bricolage Grotesque', sans-serif;
+  --f-body: var(--font-sora), 'Sora', sans-serif;
+  --f-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+
+  /* Escala de espacio (múltiplos de 4/8). */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-24: 6rem;
+  --s-32: 8rem;
+
+  --gutter: 16px;
+  --head-h: 64px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+}
+@media (min-width: 768px) {
+  .bx { --gutter: 24px; --head-h: 72px; }
+}
+@media (min-width: 1280px) {
+  .bx { --gutter: 32px; }
+}
+
+/* ── Modos ────────────────────────────────────────────────────────
+   Claro por defecto; .bx-inv es una banda invertida (tinta sobre crema
+   o crema sobre tinta, según el modo). "system" sigue al sistema. */
+.bx,
+.bx[data-theme='dark'] .bx-inv {
+  --bg: var(--crema);
+  --fg: var(--tinta);
+  --muted: var(--muted-on-light);
+  --line: rgba(26, 24, 21, 0.16);
+  --tint: rgba(26, 24, 21, 0.045);
+  --logo-on-light: block;
+  --logo-on-dark: none;
+  --tone-blue: var(--azul);
+  --tone-blue-deco: none;
+  --tone-yellow: var(--tinta);
+  --tone-yellow-bg: var(--amarillo);
+  color-scheme: light;
+}
+.bx .bx-inv,
+.bx[data-theme='dark'] {
+  --bg: var(--tinta);
+  --fg: var(--crema);
+  --muted: var(--muted-on-dark);
+  --line: rgba(240, 233, 216, 0.18);
+  --tint: rgba(240, 233, 216, 0.06);
+  --logo-on-light: none;
+  --logo-on-dark: block;
+  /* Azul sobre tinta no llega a 3:1: el texto queda crema y el azul pasa a
+     un subrayado grueso. */
+  --tone-blue: var(--crema);
+  --tone-blue-deco: underline 0.09em var(--azul);
+  --tone-yellow: var(--amarillo);
+  --tone-yellow-bg: transparent;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  .bx[data-theme='system'] {
+    --bg: var(--tinta);
+    --fg: var(--crema);
+    --muted: var(--muted-on-dark);
+    --line: rgba(240, 233, 216, 0.18);
+    --tint: rgba(240, 233, 216, 0.06);
+    --logo-on-light: none;
+    --logo-on-dark: block;
+    --tone-blue: var(--crema);
+    --tone-blue-deco: underline 0.09em var(--azul);
+    --tone-yellow: var(--amarillo);
+    --tone-yellow-bg: transparent;
+    color-scheme: dark;
+  }
+  .bx[data-theme='system'] .bx-inv {
+    --bg: var(--crema);
+    --fg: var(--tinta);
+    --muted: var(--muted-on-light);
+    --line: rgba(26, 24, 21, 0.16);
+    --tint: rgba(26, 24, 21, 0.045);
+    --logo-on-light: block;
+    --logo-on-dark: none;
+    --tone-blue: var(--azul);
+    --tone-blue-deco: none;
+    --tone-yellow: var(--tinta);
+    --tone-yellow-bg: var(--amarillo);
+    color-scheme: light;
+  }
+}
+
+.bx,
+.bx .bx-inv {
+  background: var(--bg);
+  color: var(--fg);
+}
+.bx {
+  min-height: 100vh;
+  font-family: var(--f-body);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fondo y barra de scroll de la página según el modo (body queda fuera de .bx). */
+html:has(.bx) { scrollbar-color: #9A9384 #F0E9D8; }
+body:has(.bx) { background: #F0E9D8; }
+html:has(.bx[data-theme='dark']) { scrollbar-color: #6B6455 #1A1815; color-scheme: dark; }
+body:has(.bx[data-theme='dark']) { background: #1A1815; }
+/* "only light": el modo oscuro automático de Chrome respeta esta marca y no
+   oscurece la página cuando el tema elegido es claro. */
+html:has(.bx[data-theme='light']) { color-scheme: only light; }
+@media (prefers-color-scheme: light) {
+  html:has(.bx[data-theme='system']) { color-scheme: only light; }
+}
+@media (prefers-color-scheme: dark) {
+  html:has(.bx[data-theme='system']) { scrollbar-color: #6B6455 #1A1815; color-scheme: dark; }
+  body:has(.bx[data-theme='system']) { background: #1A1815; }
+}
+
+/* ── Neutralizar lo global de la landing (nav, footer, foco, selección) ──
+   Especificidad (0,0,2): le gana a los selectores de elemento de globals.css
+   sin importar el orden de carga, y pierde contra cualquier clase de las
+   variantes. */
+div:where(.bx) nav,
+div:where(.bx) footer {
+  position: static;
+  z-index: auto;
+  display: block;
+  align-items: normal;
+  justify-content: normal;
+  padding: 0;
+  border: 0;
+  background: none;
+  backdrop-filter: none;
+  color: inherit;
+}
+:where(.bx) ul,
+:where(.bx) ol { list-style: none; }
+:where(.bx) img { display: block; max-width: 100%; }
+.bx [id] { scroll-margin-top: calc(var(--head-h) + 16px); }
+.bx :focus-visible {
+  outline: 3px solid var(--naranja);
+  outline-offset: 3px;
+}
+.bx ::selection { background: var(--naranja); color: var(--tinta); }
+.bx s { text-decoration-thickness: 1px; }
+.bx a { text-underline-offset: 0.2em; }
+:where(.bx) button { font: inherit; color: inherit; }
+
+/* ── Logo ─────────────────────────────────────────────────────────── */
+.bx-logo { display: inline-block; flex-shrink: 0; }
+.bx-logo__img { height: 100%; width: auto; }
+.bx .bx-logo__img--on-light { display: var(--logo-on-light); }
+.bx .bx-logo__img--on-dark { display: var(--logo-on-dark); }
+
+/* ── Tonos de los segmentos de título ─────────────────────────────── */
+.bx-tone--fg { color: var(--fg); }
+.bx-tone--muted { color: var(--muted); }
+.bx-tone--accent { color: var(--naranja); }
+.bx-tone--blue {
+  color: var(--tone-blue);
+  text-decoration: var(--tone-blue-deco);
+  text-underline-offset: 0.1em;
+  text-decoration-skip-ink: none;
+}
+.bx-tone--yellow {
+  color: var(--tone-yellow);
+  background: var(--tone-yellow-bg);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.06em;
+}
+
+/* ── Figuras ──────────────────────────────────────────────────────── */
+.bx-shape { flex-shrink: 0; display: block; }
+.bx-shape--square { fill: var(--naranja); }
+.bx-shape--circle { fill: var(--fg); }
+.bx-shape--triangle { fill: var(--azul); }
+.bx-shape--block { fill: var(--amarillo); }
+
+/* ── WhatsApp flotante ────────────────────────────────────────────── */
+.bx-wa {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--fg);
+  color: var(--bg);
+  box-shadow: 0 6px 20px rgba(26, 24, 21, 0.28);
+  transition: transform 200ms var(--ease-out);
+}
+.bx-wa:hover { transform: translateY(-2px); }
+.bx-wa:active { transform: translateY(0); }
+
+/* ── Barra de exploración (herramienta, no diseño) ───────────────── */
+.bx-bar {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 70;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 2px;
+  background: var(--tinta);
+  color: var(--crema);
+  border: 1px solid rgba(240, 233, 216, 0.22);
+  box-shadow: 0 8px 24px rgba(26, 24, 21, 0.3);
+  font-family: var(--f-mono);
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+.bx-bar__list { display: flex; gap: 2px; }
+.bx-bar__item,
+.bx-bar__theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  justify-content: center;
+  color: var(--crema);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out);
+}
+.bx-bar__item:hover,
+.bx-bar__theme:hover { background: rgba(240, 233, 216, 0.1); }
+.bx-bar__item[aria-current='page'] {
+  background: var(--crema);
+  color: var(--tinta);
+}
+.bx-bar__letter { font-weight: 500; }
+.bx-bar__item--final { font-weight: 500; border-right: 1px solid rgba(240, 233, 216, 0.22); }
+.bx-bar__eb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--crema);
+  border-left: 1px solid rgba(240, 233, 216, 0.22);
+  text-decoration: none;
+  transition: background-color 150ms var(--ease-out);
+}
+.bx-bar__eb:hover { background: rgba(240, 233, 216, 0.1); }
+.bx-bar__eb-track {
+  position: relative;
+  width: 30px;
+  height: 16px;
+  border: 1.5px solid var(--crema);
+}
+.bx-bar__eb-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  background: var(--crema);
+  transition: transform 200ms var(--ease-out), background-color 200ms var(--ease-out);
+}
+.bx-bar__eb[aria-checked='true'] .bx-bar__eb-knob { transform: translateX(14px); background: var(--naranja); }
+.bx-bar__eb-label { display: none; }
+@media (min-width: 1024px) {
+  .bx-bar__eb-label { display: inline; }
+}
+.bx-bar__name,
+.bx-bar__theme-label { display: none; }
+.bx-bar :focus-visible { outline-color: var(--amarillo); outline-offset: -3px; }
+@media (min-width: 1024px) {
+  .bx-bar__name,
+  .bx-bar__theme-label { display: inline; }
+  .bx-bar__name { color: inherit; opacity: 0.8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bx *,
+  .bx *::before,
+  .bx *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ── Formulario de contacto: base (antes venía de globals.css) ───── */
+.bx .contact-form { display: flex; flex-direction: column; gap: 16px; max-width: 480px; margin-top: 28px; }
+.bx .contact-form-label { font-family: var(--f-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+.bx .contact-form-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--f-body); font-size: 0.875rem; font-weight: 500; }
+.bx .contact-form input,
+.bx .contact-form textarea { width: 100%; font-family: var(--f-body); font-size: 1rem; }
+.bx .contact-form textarea { resize: vertical; min-height: 104px; line-height: 1.5; }
+.bx .contact-form-btn { align-self: flex-start; cursor: pointer; transition: transform 150ms var(--ease-out); }
+.bx .contact-form-btn:disabled { opacity: 0.6; cursor: progress; }

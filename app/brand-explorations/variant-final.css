@@ -1,0 +1,113 @@
+/* ================================================================
+   BOCETO FINAL (prefijo fx-) — solo lo que cambia respecto de A y B.
+   El resto lo ponen variant-a.css (ta-) y variant-b.css (cb-).
+================================================================ */
+
+.fx {
+  /* La banda tiene alto fijo para poder restarla del hero: así hero + banda
+     ocupan justo la primera pantalla y la banda entra completa. */
+  --band-fs: clamp(1.75rem, 1rem + 2.6vw, 3.5rem);
+  --band-h: calc(var(--band-fs) + 2rem);
+}
+
+/* A y B con el mismo ancho de contenido (1376px), alineados entre sí. */
+.fx .ta-wrap { max-width: calc(1376px + 2 * var(--gutter)); }
+
+/* ── Banda ───────────────────────────────────────────────────────── */
+.fx .cb-band { display: flex; align-items: center; height: var(--band-h); padding: 0; }
+.fx .cb-band__item { font-size: var(--band-fs); }
+
+/* ── Hero: lo que sobra de alto se lo lleva la composición de figuras ── */
+.fx-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  min-height: calc(100svh - var(--head-h) - var(--band-h));
+}
+.fx-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(140px, 1fr);
+  gap: var(--s-6);
+  margin-top: var(--s-6);
+}
+
+/* Las figuras se dimensionan contra la celda (unidades de contenedor): con
+   pantallas bajas se achican en vez de empujar la banda fuera de vista.
+   S = lado del cuadrado; todo lo demás es proporción de S. El círculo y el
+   triángulo quedan siempre en la mitad inferior, lejos del titular. */
+.fx-art {
+  position: relative;
+  container-type: size;
+  margin-right: calc(-1 * var(--px));
+}
+.fx-art > span { position: absolute; display: block; --S: min(100cqh, 62cqw); }
+.fx-sq { right: 0; bottom: 0; width: var(--S); height: var(--S); background: var(--naranja); }
+.fx-ci {
+  right: calc(var(--S) * 0.74);
+  bottom: calc(var(--S) * 0.04);
+  width: calc(var(--S) * 0.46);
+  height: calc(var(--S) * 0.46);
+  border-radius: 50%;
+  background: var(--fg);
+}
+.fx-tr {
+  right: calc(var(--S) * 1.1);
+  bottom: 0;
+  width: calc(var(--S) * 0.42);
+  height: calc(var(--S) * 0.42);
+  background: var(--azul);
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+.fx-bl {
+  right: calc(var(--S) * 0.08);
+  bottom: 0;
+  width: calc(var(--S) * 0.22);
+  height: calc(var(--S) * 0.22);
+  background: var(--amarillo);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fx-sq { animation: cb-from-right 1100ms var(--ease-out) both; }
+  .fx-tr { animation: cb-from-left 1100ms 120ms var(--ease-out) both; }
+  .fx-ci { animation: cb-drop 1100ms 220ms var(--ease-out) both; }
+  .fx-bl { animation: cb-rise 900ms 360ms var(--ease-out) both; }
+}
+
+@media (min-width: 1024px) {
+  .fx-row {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: minmax(320px, 1fr);
+    column-gap: var(--s-8);
+    row-gap: 0;
+    margin-top: var(--s-6);
+  }
+  .fx-copy { grid-column: 1 / 6; align-self: start; padding: var(--s-4) 0 var(--s-12); }
+  /* El cuadrado sube y se mete detrás del final del titular (el afiche de B). */
+  .fx-art { grid-column: 6 / 13; margin-top: calc(-1 * (var(--s-6) + var(--cb-h1) * 0.5)); }
+}
+
+/* ── Trabajo: nombre del proyecto en una línea ───────────────────── */
+.fx .cb-proj__name {
+  font-size: clamp(2rem, 0.8rem + 2.8vw, 3.75rem);
+  overflow-wrap: normal;
+  text-wrap: balance;
+}
+
+/* ── Nosotros: filas en celular; desde tablet, una columna por dato ── */
+.fx .fx-stats { grid-template-columns: minmax(0, 1fr); }
+.fx .fx-stats .ta-stat { padding: var(--s-6) 0; border-left: 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 768px) {
+  .fx .fx-stats { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .fx .fx-stats .ta-stat { padding: var(--s-6) var(--s-6) 0; border-bottom: 0; }
+  .fx .fx-stats .ta-stat:first-child { padding-left: 0; }
+  .fx .fx-stats .ta-stat + .ta-stat { border-left: 1px solid var(--line); }
+}
+
+/* ── Contacto: el titular con el estilo de títulos de A ──────────── */
+.fx .cb-contact__title {
+  font-size: clamp(2.5rem, 1.2rem + 4.4vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: none;
+  text-wrap: balance;
+}
