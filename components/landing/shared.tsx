@@ -103,29 +103,47 @@ export function Seg({ seg }: { seg: StyledSeg }) {
 }
 
 /* ------------------------------------------------------------------
-   Logo: los lockups oficiales, sin redibujar. Se muestra el que corresponde
-   al fondo (tinta sobre crema, crema sobre tinta) según el tema activo.
+   Logo: símbolo + wordmark, en dos piezas para dimensionarlas por separado.
+   - Símbolo: recortado píxel a píxel del lockup oficial (sin redibujar).
+   - Wordmark: la propuesta de MARCA/FORJO-BRAND-2026/03-LOGO/logo-evolution
+     ("forjo" Bricolage + "f" Archivo, "studio" Sora, divisor).
+   El tamaño sale de --logo-mark (alto del símbolo; CSS en landing.css).
+   `height` lo fija en px para un uso puntual. Se muestra la versión que
+   corresponde al fondo (tinta sobre crema, crema sobre tinta).
 ------------------------------------------------------------------ */
-export function Logo({ height = 32, className = '' }: { height?: number; className?: string }) {
-  const width = Math.round((730 / 190) * height)
+const MARK = { w: 143, h: 170 } // forjo-symbol-*.png
+const WORD = { w: 1081, h: 186 } // forjo-studio-wordmark-*.png (@2x)
+
+export function Logo({ height, className = '' }: { height?: number; className?: string }) {
+  const style = height ? ({ '--logo-mark': `${height}px` } as React.CSSProperties) : undefined
+  const markH = height ?? 30
+  const wordH = Math.round(markH * 0.73)
+  const piece = (kind: 'symbol' | 'wordmark', tone: 'tinta' | 'crema') => {
+    const size = kind === 'symbol' ? MARK : WORD
+    const h = kind === 'symbol' ? markH : wordH
+    return (
+      <Image
+        className={`bx-logo__img bx-logo__img--on-${tone === 'tinta' ? 'light' : 'dark'}`}
+        src={kind === 'symbol' ? `/brand/forjo-symbol-${tone}.png` : `/brand/forjo-studio-wordmark-${tone}.png`}
+        alt=""
+        width={Math.round((size.w / size.h) * h)}
+        height={h}
+        // La landing es oscura: la versión crema va precargada; la tinta solo
+        // se descarga si algún fondo claro la muestra.
+        priority={tone === 'crema'}
+      />
+    )
+  }
   return (
-    <span className={`bx-logo ${className}`} style={{ height }}>
-      <Image
-        className="bx-logo__img bx-logo__img--on-light"
-        src="/brand/forjo-studio-lockup-tinta.png"
-        alt="Forjo Studio"
-        width={width}
-        height={height}
-        priority
-      />
-      <Image
-        className="bx-logo__img bx-logo__img--on-dark"
-        src="/brand/forjo-studio-lockup-crema.png"
-        alt="Forjo Studio"
-        width={width}
-        height={height}
-        priority
-      />
+    <span className={`bx-logo ${className}`} style={style} role="img" aria-label="Forjo Studio">
+      <span className="bx-logo__mark">
+        {piece('symbol', 'tinta')}
+        {piece('symbol', 'crema')}
+      </span>
+      <span className="bx-logo__word">
+        {piece('wordmark', 'tinta')}
+        {piece('wordmark', 'crema')}
+      </span>
     </span>
   )
 }
@@ -203,24 +221,33 @@ export function WhatsAppFloat() {
 }
 
 /** Marquesina: la primera copia es la que leen los lectores de pantalla; las
- *  repeticiones (para el loop) quedan ocultas. */
+ *  repeticiones (para el loop) quedan ocultas.
+ *  minChars: si la lista es corta, se repite dentro de cada copia hasta
+ *  sumar esa cantidad de caracteres, para que una copia siempre sea más
+ *  ancha que la pantalla y el loop no deje un hueco. --n (ítems por copia)
+ *  queda en el track para que el CSS calcule la duración. */
 export function MarqueeTrack({
   items,
   className,
   itemClass,
   sep,
+  minChars = 0,
 }: {
   items: string[]
   className: string
   itemClass: string
   sep: (i: number) => React.ReactNode
+  minChars?: number
 }) {
+  const chars = items.join('').length || 1
+  const times = Math.max(1, Math.ceil(minChars / chars))
+  const fill = Array.from({ length: times }, () => items).flat()
   return (
-    <div className={className}>
+    <div className={className} style={{ '--n': fill.length } as React.CSSProperties}>
       {[0, 1].map((rep) => (
         <ul key={rep} aria-hidden={rep > 0 ? true : undefined} aria-label={rep === 0 ? 'Lo que hacemos' : undefined}>
-          {items.map((t, i) => (
-            <li key={i} className={itemClass}>
+          {fill.map((t, i) => (
+            <li key={i} className={itemClass} aria-hidden={rep === 0 && i >= items.length ? true : undefined}>
               {sep(i)}
               <span>{t}</span>
             </li>

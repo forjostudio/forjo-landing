@@ -73,7 +73,18 @@ export interface Project {
   url: string
   thumb: string
   demoLabel: string
+  shapeColor: string // color de la forma de atrás (SHAPE_COLORS); vacío = automático
 }
+
+/** Colores posibles para las formas detrás de los proyectos: la paleta de la
+ *  marca (sin tinta, que no se vería sobre el fondo). value = token de
+ *  landing.css; hex = solo para la muestra del panel. */
+export const SHAPE_COLORS: { name: string; value: string; hex: string }[] = [
+  { name: 'Naranja', value: 'naranja', hex: '#D94A2B' },
+  { name: 'Azul', value: 'azul', hex: '#2F5CB0' },
+  { name: 'Amarillo', value: 'amarillo', hex: '#F2C744' },
+  { name: 'Crema', value: 'crema', hex: '#F0E9D8' },
+]
 
 export interface Stat {
   key: string
@@ -534,6 +545,7 @@ export const DEFAULT_CONTENT: LandingContent = {
         url: 'https://agualaboca.forjo.studio/',
         thumb: '/agualaboca.png',
         demoLabel: 'Ver tienda →',
+        shapeColor: '',
       },
       {
         name: 'JOTALAB',
@@ -542,6 +554,7 @@ export const DEFAULT_CONTENT: LandingContent = {
         url: 'https://jjotalab.com',
         thumb: '/jjotalab.png?v=2',
         demoLabel: 'Ver demo →',
+        shapeColor: '',
       },
     ],
     placeholders: 1,

@@ -119,6 +119,23 @@ function migrate(data: unknown): unknown {
   return out
 }
 
+/** Los arrays guardados reemplazan al default entero, así que un campo nuevo
+ *  de proyecto no llega a los ya cargados: se completa acá (al final, para
+ *  que en el panel aparezca último). Sin esto el panel no lo muestra. */
+function fillProjectFields(c: LandingContent): LandingContent {
+  if (!Array.isArray(c.work?.projects)) return c
+  return {
+    ...c,
+    work: {
+      ...c.work,
+      projects: c.work.projects.map((p) => ({
+        ...p,
+        shapeColor: typeof p.shapeColor === 'string' ? p.shapeColor : '',
+      })),
+    },
+  }
+}
+
 /** Contenido de la landing: lo guardado en DB mergeado sobre el default. Si no
  *  hay fila o falla la lectura, devuelve el default (la landing se ve igual). */
 export async function getContent(): Promise<LandingContent> {
@@ -129,7 +146,7 @@ export async function getContent(): Promise<LandingContent> {
       .select('data')
       .eq('id', 'forjo')
       .maybeSingle()
-    return deepMerge(DEFAULT_CONTENT, migrate(coerceStyledSegs(data?.data)))
+    return fillProjectFields(deepMerge(DEFAULT_CONTENT, migrate(coerceStyledSegs(data?.data))))
   } catch {
     return DEFAULT_CONTENT
   }

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { ContactForm } from '@/components/ContactForm'
-import type { LandingContent, ServiceItem } from '@/lib/content/schema'
+import { SHAPE_COLORS, type LandingContent, type ServiceItem } from '@/lib/content/schema'
 import { brandFontVars } from '@/components/landing/fonts'
 import {
   Arrow,
@@ -22,6 +22,12 @@ import {
   visibility,
 } from '@/components/landing/shared'
 import '@/components/landing/landing.css'
+
+/** Colores de forma válidos (los del panel); cualquier otro valor = automático. */
+const SHAPE_FILLS = new Set(SHAPE_COLORS.map((s) => s.value))
+
+/** Parte un texto en oraciones (después de . ! ? seguidos de espacio). */
+const sentences = (text: string) => text.split(/(?<=[.!?])\s+/).filter(Boolean)
 
 /* ================================================================
    Landing de forjo.studio (Exploración visual 2.0, boceto final).
@@ -171,7 +177,7 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
       <header className="l-head" data-edit="nav">
         <div className="l-head__inner">
           <a href="#top" className="l-head__logo" aria-label="Forjo Studio, inicio">
-            <Logo height={30} />
+            <Logo />
           </a>
           <nav aria-label="Principal" className="l-head__nav">
             <ul>
@@ -231,6 +237,7 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
               items={c.marquee}
               className="l-band__track"
               itemClass="l-band__item"
+              minChars={80}
               sep={() => <Shape kind="circle" size={20} />}
             />
           </div>
@@ -333,7 +340,11 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
                 {c.work.projects.map((p, i) => (
                   <li key={i} className={`l-proj${i % 2 ? ' l-proj--flip' : ''}`}>
                     <div className="l-proj__media">
-                      <Shape kind={i % 2 ? 'triangle' : 'block'} size={200} className="l-proj__shape" />
+                      <Shape
+                        kind={i % 2 ? 'triangle' : 'block'}
+                        size={200}
+                        className={`l-proj__shape${SHAPE_FILLS.has(p.shapeColor) ? ` l-proj__shape--${p.shapeColor}` : ''}`}
+                      />
                       <a href={p.url} target="_blank" rel="noopener" className="l-proj__thumb" tabIndex={-1} aria-hidden="true">
                         {p.thumb && (
                           <Image
@@ -440,8 +451,16 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
         <div className="l-wrap">
           <div className="l-foot__grid">
             <div className="l-foot__brand">
-              <Logo height={28} />
-              <p>{c.footer.brandText}</p>
+              <Logo />
+              <p>
+                {/* Una oración por línea en el celular; seguidas en pantallas grandes. */}
+                {sentences(c.footer.brandText).map((s, i, all) => (
+                  <span key={i}>
+                    {s}
+                    {i < all.length - 1 ? ' ' : ''}
+                  </span>
+                ))}
+              </p>
             </div>
             {c.footer.cols.map((col, i) => (
               <nav key={i} className="l-foot__col" aria-label={col.title}>
@@ -459,7 +478,15 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
             ))}
           </div>
           <div className="l-foot__bottom">
-            <span>{c.footer.copyright}</span>
+            {/* Cada parte del copyright (separadas por " · ") va en su línea en el celular. */}
+            <span className="l-foot__copy">
+              {c.footer.copyright.split(/\s+·\s+/).map((part, i) => (
+                <span key={i}>
+                  {i > 0 && <span className="l-foot__dot"> · </span>}
+                  {part}
+                </span>
+              ))}
+            </span>
             <span className="l-foot__legal">
               <a href="/privacidad.html">Privacidad</a>
               <a href="/terminos.html">Términos</a>

@@ -170,7 +170,16 @@ div:where(.bx) footer {
 :where(.bx) button { font: inherit; color: inherit; }
 
 /* ── Logo ─────────────────────────────────────────────────────────── */
-.bx-logo { display: inline-block; flex-shrink: 0; }
+/* Mismas piezas que la landing (components/landing/landing.css). */
+.bx-logo {
+  --logo-mark: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--logo-mark) * 0.3);
+  flex-shrink: 0;
+}
+.bx-logo__mark { display: block; height: var(--logo-mark); }
+.bx-logo__word { display: block; height: calc(var(--logo-mark) * 0.73); }
 .bx-logo__img { height: 100%; width: auto; }
 .bx .bx-logo__img--on-light { display: var(--logo-on-light); }
 .bx .bx-logo__img--on-dark { display: var(--logo-on-dark); }

@@ -113,7 +113,21 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 .l-skip:focus { top: 16px; }
 
 /* ── Primitivas de marca (las emite components/landing/shared.tsx) ── */
-.bx-logo { display: inline-block; flex-shrink: 0; }
+/* Logo en dos piezas: --logo-mark = alto del símbolo; el wordmark mide
+   0.73 de eso y queda centrado (su centro óptico coincide con el del
+   lockup oficial). Separación: 0.3 del símbolo. */
+.bx-logo {
+  --logo-mark: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--logo-mark) * 0.3);
+  flex-shrink: 0;
+}
+@media (min-width: 768px) {
+  .bx-logo { --logo-mark: 30px; }
+}
+.bx-logo__mark { display: block; height: var(--logo-mark); }
+.bx-logo__word { display: block; height: calc(var(--logo-mark) * 0.73); }
 .bx-logo__img { height: 100%; width: auto; }
 .site .bx-logo__img--on-light { display: var(--logo-on-light); }
 .site .bx-logo__img--on-dark { display: var(--logo-on-dark); }
@@ -254,8 +268,8 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
   background: var(--bg);
   border-bottom: 2px solid var(--fg);
 }
-.l-head__inner { display: flex; align-items: center; gap: var(--s-8); height: var(--head-h); padding: 0 var(--px); }
-.l-head__logo { display: inline-flex; padding: 6px 0; }
+.l-head__inner { display: flex; align-items: center; gap: var(--s-4); height: var(--head-h); padding: 0 var(--px); }
+.l-head__logo { display: inline-flex; align-items: center; min-height: 44px; }
 .l-head__nav { display: none; margin-left: auto; }
 .l-head__nav ul { display: flex; gap: var(--s-6); }
 .l-head__nav a {
@@ -283,6 +297,9 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
   transition: box-shadow 200ms var(--ease-out);
 }
 .l-head__cta:hover { box-shadow: inset 0 -3px 0 var(--naranja); }
+@media (min-width: 768px) {
+  .l-head__inner { gap: var(--s-8); }
+}
 @media (min-width: 900px) {
   .l-head__nav { display: block; }
   .l-head__cta { margin-left: 0; }
@@ -372,16 +389,43 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
   height: calc(var(--S) * 0.22);
   background: var(--amarillo);
 }
+/* Entrada en un solo compás: rótulo → titular → bajada → acciones, y las
+   figuras se arman detrás del titular. Solo opacity y translate/scale.
+   Las entradas usan las propiedades translate/scale; transform queda libre
+   para la deriva con el scroll (abajo), así no se pisan. */
 @media (prefers-reduced-motion: no-preference) {
-  .l-hero__sq { animation: l-from-right 1100ms var(--ease-out) both; }
-  .l-hero__tr { animation: l-from-left 1100ms 120ms var(--ease-out) both; }
-  .l-hero__ci { animation: l-drop 1100ms 220ms var(--ease-out) both; }
-  .l-hero__bl { animation: l-rise 900ms 360ms var(--ease-out) both; }
+  .l-hero__meta { animation: l-fade-up 600ms var(--ease-out) both; }
+  .l-hero__title { animation: l-title-in 800ms 80ms var(--ease-out) both; }
+  .l-hero__sub { animation: l-fade-up 700ms 240ms var(--ease-out) both; }
+  .l-hero__actions { animation: l-fade-up 700ms 340ms var(--ease-out) both; }
+  .l-hero__sq { animation: l-from-right 1100ms 140ms var(--ease-out) both; }
+  .l-hero__tr { animation: l-from-left 1100ms 280ms var(--ease-out) both; }
+  .l-hero__ci { animation: l-drop 1100ms 380ms var(--ease-out) both; }
+  .l-hero__bl { animation: l-rise 900ms 540ms var(--ease-out) both; }
 }
-@keyframes l-from-right { from { transform: translateX(40%); } }
-@keyframes l-from-left { from { transform: translateX(-60%); } }
-@keyframes l-drop { from { transform: translateY(-50%) scale(0.85); } }
-@keyframes l-rise { from { transform: translateY(100%); } }
+@keyframes l-fade-up { from { opacity: 0; translate: 0 12px; } }
+@keyframes l-title-in { from { opacity: 0; translate: 0 0.14em; } }
+@keyframes l-from-right { from { translate: 40% 0; } }
+@keyframes l-from-left { from { translate: -60% 0; } }
+@keyframes l-drop { from { translate: 0 -50%; scale: 0.85; } }
+@keyframes l-rise { from { translate: 0 100%; } }
+
+/* Deriva con el scroll: al bajar, cada figura se mueve a otro ritmo (el
+   cuadrado se queda, el círculo y el bloque suben). Muy leve; solo donde
+   hay scroll-driven animations, y nunca con movimiento reducido. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .l-hero__sq { animation: l-from-right 1100ms 140ms var(--ease-out) both, l-drift-sq linear both; }
+    .l-hero__tr { animation: l-from-left 1100ms 280ms var(--ease-out) both, l-drift-tr linear both; }
+    .l-hero__ci { animation: l-drop 1100ms 380ms var(--ease-out) both, l-drift-ci linear both; }
+    .l-hero__bl { animation: l-rise 900ms 540ms var(--ease-out) both, l-drift-bl linear both; }
+    .l-hero__art > span { animation-timeline: auto, scroll(root); animation-range: normal, 0 100svh; }
+  }
+}
+@keyframes l-drift-sq { to { transform: translateY(6%); } }
+@keyframes l-drift-tr { to { transform: translateY(-4%); } }
+@keyframes l-drift-ci { to { transform: translateY(-16%); } }
+@keyframes l-drift-bl { to { transform: translateY(-28%); } }
 
 @media (min-width: 1024px) {
   .l-hero { padding-top: var(--s-8); }
@@ -409,11 +453,14 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 }
 .l-band__track { display: flex; width: max-content; }
 .l-band__track ul { display: flex; }
+/* Separación y círculo acompañan al tamaño del texto (que escala con el
+   ancho): a 56px el círculo de 20px quedaba chico. El padding va dentro
+   de cada ítem, así las dos copias miden lo mismo y el loop no salta. */
 .l-band__item {
   display: inline-flex;
   align-items: center;
-  gap: var(--s-6);
-  padding-right: var(--s-6);
+  gap: max(var(--s-6), 0.6em);
+  padding-right: max(var(--s-6), 0.6em);
   font-family: var(--f-display);
   font-size: var(--band-fs);
   font-weight: 800;
@@ -422,8 +469,20 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
   text-transform: uppercase;
   white-space: nowrap;
 }
+.l-band__item .bx-shape { width: max(16px, 0.45em); height: max(16px, 0.45em); }
+
+/* Velocidad: segundos por ítem (--n lo pone MarqueeTrack), así la
+   velocidad no cambia si el panel suma o saca servicios. Ronda 55 px/s en
+   el celular y 75 px/s en escritorio (antes 48 y 91). */
+.l-band { --band-step: 7s; }
+@media (min-width: 768px) { .l-band { --band-step: 7.5s; } }
+@media (min-width: 1280px) { .l-band { --band-step: 9s; } }
 @media (prefers-reduced-motion: no-preference) {
-  .l-band__track { animation: l-marquee 70s linear infinite; }
+  .l-band__track { animation: l-marquee calc(var(--n, 9) * var(--band-step)) linear infinite; }
+}
+/* Con mouse, se frena al pasar por encima para leerla. */
+@media (hover: hover) {
+  .l-band:hover .l-band__track { animation-play-state: paused; }
 }
 @media (prefers-reduced-motion: reduce) {
   .l-band__track ul + ul { display: none; }
@@ -585,6 +644,12 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 .l-proj { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-8); }
 .l-proj__media { position: relative; margin: 0 24px 24px 0; }
 .l-proj__shape { position: absolute; right: -24px; bottom: -24px; width: 42%; height: auto; aspect-ratio: 1; }
+/* Color elegido en el panel (work.projects[].shapeColor); sin elegir, la
+   forma conserva su color (bloque amarillo / triángulo azul). */
+.site .l-proj__shape--naranja { fill: var(--naranja); }
+.site .l-proj__shape--azul { fill: var(--azul); }
+.site .l-proj__shape--amarillo { fill: var(--amarillo); }
+.site .l-proj__shape--crema { fill: var(--crema); }
 .l-proj__thumb {
   position: relative;
   z-index: 1;
@@ -794,14 +859,19 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 /* ── Pie ─────────────────────────────────────────────────────────── */
 .l-foot { padding: var(--s-16) 0 var(--s-24); border-top: 1px solid var(--line); }
 .l-foot__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-8); }
+/* En el celular, marca y créditos centrados, una pieza por línea. */
+.l-foot__brand { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .l-foot__brand p { max-width: 34ch; margin-top: var(--s-4); font-size: 0.9375rem; color: var(--muted); }
+.l-foot__brand p span { display: block; }
+.l-foot__col { text-align: center; }
 .l-foot__col a { display: inline-block; padding: 10px 0; font-size: 0.9375rem; }
 .l-foot__col a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
 .l-foot__bottom {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--s-2) var(--s-6);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  text-align: center;
   margin-top: var(--s-12);
   padding-top: var(--s-4);
   border-top: 2px solid var(--fg);
@@ -813,8 +883,25 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 .l-foot__legal { display: inline-flex; gap: var(--s-6); }
 .l-foot__legal a { display: inline-block; padding: 12px 0; margin: -12px 0; }
 .l-foot__legal a:hover { text-decoration: underline; }
+.l-foot__copy > span { display: block; }
+.l-foot__copy > span + span { margin-top: var(--s-3); }
+.l-foot__dot { display: none; }
 @media (min-width: 768px) {
   .l-foot__grid { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); }
+  .l-foot__brand { align-items: flex-start; text-align: left; }
+  .l-foot__col { text-align: left; }
+  .l-foot__brand p span { display: inline; }
+  .l-foot__bottom {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: normal;
+    justify-content: space-between;
+    gap: var(--s-2) var(--s-6);
+    text-align: left;
+  }
+  .l-foot__copy > span,
+  .l-foot__dot { display: inline; }
+  .l-foot__copy > span + span { margin-top: 0; }
 }
 
 /* ── Movimiento ──────────────────────────────────────────────────── */

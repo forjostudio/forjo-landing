@@ -95,6 +95,7 @@
 .adm-fmt--i { font-style: italic; }
 .adm-fmt--u { text-decoration: underline; }
 .adm-swatches { display: flex; gap: 5px; align-items: center; margin-left: 8px; }
+.adm-swatches--field { margin-left: 0; }
 .adm-swatch {
   width: 20px;
   height: 20px;

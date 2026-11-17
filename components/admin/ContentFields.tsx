@@ -1,7 +1,7 @@
 'use client'
 
 import { ImageUpload } from './ImageUpload'
-import { PALETTE, type StyledSeg } from '@/lib/content/schema'
+import { PALETTE, SHAPE_COLORS, type StyledSeg } from '@/lib/content/schema'
 
 // Campos string que son imágenes (se editan con subida a Storage).
 const IMAGE_KEYS = new Set(['thumb', 'ogImage'])
@@ -23,6 +23,7 @@ const LABELS: Record<string, string> = {
   ctaHref: 'Botón · link', label: 'Texto', href: 'Link', meta: 'Meta', desc: 'Descripción',
   key: 'Número', val: 'Etiqueta', cat: 'Categoría', year: 'Año', url: 'URL',
   thumb: 'Imagen (URL)', demoLabel: 'Botón demo', placeholders: 'Placeholders (cantidad)',
+  shapeColor: 'Color de la forma',
   note: 'Nota', includedLabel: 'Título "incluye"', addonsLabel: 'Título add-ons',
   paymentPre: 'Pago · inicio', paymentStrong: 'Pago · negrita', paymentPost: 'Pago · final',
   paymentLine2: 'Pago · línea 2', email: 'Email', whatsappLabel: 'WhatsApp · texto',
@@ -141,6 +142,41 @@ function StyledTextField({
   )
 }
 
+// ---- Color de la forma de un proyecto: solo la paleta (o automático) ----
+function ShapeColorField({ k, value, onChange }: { k: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="adm-field">
+      <span className="adm-label">{label(k)}</span>
+      <span className="adm-swatches adm-swatches--field" role="radiogroup" aria-label={label(k)}>
+        <button
+          type="button"
+          role="radio"
+          aria-checked={!value}
+          className={`adm-swatch adm-swatch--none ${!value ? 'is-on' : ''}`}
+          onClick={() => onChange('')}
+          title="Automático (alterna amarillo y azul)"
+          aria-label="Automático"
+        >
+          ×
+        </button>
+        {SHAPE_COLORS.map((c) => (
+          <button
+            key={c.value}
+            type="button"
+            role="radio"
+            aria-checked={value === c.value}
+            title={c.name}
+            aria-label={c.name}
+            onClick={() => onChange(c.value)}
+            className={`adm-swatch ${value === c.value ? 'is-on' : ''}`}
+            style={{ background: c.hex }}
+          />
+        ))}
+      </span>
+    </div>
+  )
+}
+
 function FieldNode({
   k,
   value,
@@ -152,6 +188,9 @@ function FieldNode({
 }) {
   if (isStyledSeg(value)) {
     return <StyledTextField k={k} value={value} onChange={(v) => onChange(v)} />
+  }
+  if (typeof value === 'string' && k === 'shapeColor') {
+    return <ShapeColorField k={k} value={value} onChange={(v) => onChange(v)} />
   }
   if (typeof value === 'string' && IMAGE_KEYS.has(k)) {
     return <ImageUpload label={label(k)} value={value} onChange={(v) => onChange(v)} />
