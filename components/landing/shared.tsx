@@ -91,12 +91,17 @@ const SEG_TONE: Record<string, string> = {
 
 export function Seg({ seg }: { seg: StyledSeg }) {
   const tone = seg.color ? SEG_TONE[seg.color.toLowerCase()] : undefined
-  const style: CSSProperties = {}
+  const style: CSSProperties & Record<string, string | number> = {}
   if (seg.underline) style.textDecoration = 'underline'
-  if (seg.size) style.fontSize = `${seg.size}em`
-  if (!tone && !seg.underline && !seg.size) return <>{seg.text}</>
+  // Con tamaño de celular, el font-size lo resuelve .bx-seg por media query.
+  if (seg.sizeMobile) {
+    style['--seg-d'] = seg.size ?? 1
+    style['--seg-m'] = seg.sizeMobile
+  } else if (seg.size) style.fontSize = `${seg.size}em`
+  if (!tone && !seg.underline && !seg.size && !seg.sizeMobile) return <>{seg.text}</>
+  const cls = [tone && `bx-tone bx-tone--${tone}`, seg.sizeMobile && 'bx-seg'].filter(Boolean).join(' ')
   return (
-    <span className={tone ? `bx-tone bx-tone--${tone}` : undefined} style={style}>
+    <span className={cls || undefined} style={style}>
       {seg.text}
     </span>
   )

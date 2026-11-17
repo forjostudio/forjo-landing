@@ -40,7 +40,7 @@ const LABELS: Record<string, string> = {
 export const label = (k: string) => LABELS[k] ?? k
 const singular = (k: string) => (k.endsWith('s') ? k.slice(0, -1) : k)
 
-const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline', 'size']
+const STYLE_KEYS = ['text', 'color', 'bold', 'italic', 'underline', 'size', 'sizeMobile']
 function isStyledSeg(v: unknown): v is StyledSeg {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return false
   const o = v as Record<string, unknown>
@@ -78,6 +78,12 @@ function StyledTextField({
     let next = Math.round((cur + delta) * 10) / 10
     next = Math.min(2.5, Math.max(0.5, next))
     set({ size: next === 1 ? undefined : next })
+  }
+  // Celular arranca desde el tamaño de escritorio; "=" lo vuelve a atar a él.
+  const mobile = value.sizeMobile ?? value.size ?? 1
+  const stepMobile = (delta: number) => {
+    const next = Math.min(2.5, Math.max(0.5, Math.round((mobile + delta) * 10) / 10))
+    set({ sizeMobile: next })
   }
   return (
     <div className="adm-field">
@@ -129,6 +135,7 @@ function StyledTextField({
           ))}
         </span>
         <span className="adm-size">
+          <span className="adm-size-tag">Escritorio</span>
           <button type="button" className="adm-fmt" onClick={() => stepSize(-0.1)} title="Más chico">
             A−
           </button>
@@ -136,6 +143,27 @@ function StyledTextField({
           <button type="button" className="adm-fmt" onClick={() => stepSize(0.1)} title="Más grande">
             A+
           </button>
+        </span>
+        <span className="adm-size">
+          <span className="adm-size-tag">Celular</span>
+          <button type="button" className="adm-fmt" onClick={() => stepMobile(-0.1)} title="Más chico en celular">
+            A−
+          </button>
+          <span className="adm-size-val">{Math.round(mobile * 100)}%</span>
+          <button type="button" className="adm-fmt" onClick={() => stepMobile(0.1)} title="Más grande en celular">
+            A+
+          </button>
+          {value.sizeMobile !== undefined && (
+            <button
+              type="button"
+              className="adm-fmt"
+              onClick={() => set({ sizeMobile: undefined })}
+              title="Igual que escritorio"
+              aria-label="Igual que escritorio"
+            >
+              =
+            </button>
+          )}
         </span>
       </div>
     </div>

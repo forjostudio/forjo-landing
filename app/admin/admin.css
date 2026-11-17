@@ -146,6 +146,7 @@
 .adm-upload:hover { border-color: var(--accent); }
 
 .adm-size { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; }
+.adm-size-tag { font-size: 12px; color: var(--muted); }
 .adm-size-val {
   font-family: var(--font-mono);
   font-size: 12px;

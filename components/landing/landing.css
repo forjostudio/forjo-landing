@@ -132,6 +132,12 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 .site .bx-logo__img--on-light { display: var(--logo-on-light); }
 .site .bx-logo__img--on-dark { display: var(--logo-on-dark); }
 
+/* Segmento de titular con tamaño propio en celular (panel: A−/A+ "Celular"). */
+.bx-seg { font-size: calc(var(--seg-m) * 1em); }
+@media (min-width: 768px) {
+  .bx-seg { font-size: calc(var(--seg-d) * 1em); }
+}
+
 .bx-tone--fg { color: var(--fg); }
 .bx-tone--muted { color: var(--muted); }
 .bx-tone--accent { color: var(--naranja); }
