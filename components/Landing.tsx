@@ -132,14 +132,17 @@ function ServiceExtras({ item }: { item: ServiceItem }) {
 function ServiceHead({ item, n, total }: { item: ServiceItem; n: number; total: number }) {
   return (
     <>
-      <p className="l-svc__index">
-        <Shape kind={shapeAt(n - 1)} size={12} />
-        <span>
-          {pad(n)}/{pad(total)}
-          {item.kicker && ` · ${item.kicker}`}
-        </span>
-      </p>
-      <h3 className="l-svc__title">{item.title}</h3>
+      {/* En celular, índice + título quedan fijos mientras dura el servicio. */}
+      <div className="l-svc__pin">
+        <p className="l-svc__index">
+          <Shape kind={shapeAt(n - 1)} size={12} />
+          <span>
+            {pad(n)}/{pad(total)}
+            {item.kicker && ` · ${item.kicker}`}
+          </span>
+        </p>
+        <h3 className="l-svc__title">{item.title}</h3>
+      </div>
       <p className="l-svc__desc">{item.desc}</p>
       {item.tags.length > 0 && (
         <ul className="l-tags">
@@ -307,7 +310,7 @@ export function Landing({ c, fx = true }: { c: LandingContent; fx?: boolean }) {
                 {c.process.steps.map((st, i) => {
                   const m = splitMeta(st.meta)
                   return (
-                    <li key={i} className="l-step">
+                    <li key={i} className="l-step" style={{ ['--i' as string]: i } as CSSProperties}>
                       <div className="l-step__node">
                         <Shape kind={shapeAt(i)} size={20} />
                       </div>

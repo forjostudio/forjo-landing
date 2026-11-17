@@ -543,6 +543,22 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 
 /* ── Servicios ───────────────────────────────────────────────────── */
 .l-svc { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-8); padding: var(--s-8) 0 var(--s-16); border-top: 2px solid var(--fg); }
+/* Celular y tablet: índice + título del servicio quedan pegados bajo el header
+   hasta que termina el servicio y el siguiente los empuja (como la columna fija
+   de escritorio). Para eso el pin tiene que ser hijo directo del article: la
+   caja de .l-svc__head se disuelve y el espacio que daba el gap pasa al body. */
+.l-svc:not(.l-svc--simple) { row-gap: 0; }
+.l-svc__head { display: contents; }
+.l-svc__body { margin-top: var(--s-8); }
+.l-svc__pin {
+  position: sticky;
+  top: var(--head-h);
+  z-index: 2;
+  /* Aire arriba solo cuando está pegado: el margen negativo lo compensa. */
+  margin-top: calc(-1 * var(--s-3));
+  padding-top: var(--s-3);
+  background: var(--bg);
+}
 .l-svc__index { display: flex; align-items: center; gap: var(--s-2); font-family: var(--f-mono); font-size: 0.8125rem; letter-spacing: 0.02em; }
 .l-svc__title {
   margin: var(--s-4) 0;
@@ -628,8 +644,9 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 @media (min-width: 1024px) {
   .l-svc { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s-8); padding: var(--s-12) 0 var(--s-24); }
   /* La columna izquierda queda fija mientras pasan los planes. */
-  .l-svc__head { grid-column: 1 / 5; align-self: start; position: sticky; top: calc(var(--head-h) + var(--s-8)); }
-  .l-svc__body { grid-column: 5 / 13; }
+  .l-svc__head { display: block; grid-column: 1 / 5; align-self: start; position: sticky; top: calc(var(--head-h) + var(--s-8)); }
+  .l-svc__body { grid-column: 5 / 13; margin-top: 0; }
+  .l-svc__pin { position: static; margin-top: 0; padding-top: 0; }
   .l-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .l-pair .l-svc--simple { padding-right: var(--s-8); }
   .l-pair .l-svc--simple + .l-svc--simple { padding-left: var(--s-8); padding-right: 0; box-shadow: inset 1px 0 0 var(--line); }
@@ -637,7 +654,7 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 
 /* ── Proceso ─────────────────────────────────────────────────────── */
 .l-steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-12); }
-.l-step { position: relative; padding-top: var(--s-8); border-top: 1px solid var(--fg); }
+.l-step { position: relative; padding-top: var(--s-8); border-top: 1px solid var(--fg); --step-at: 0%; --step-w: 30%; }
 .l-step__node { position: absolute; top: -10px; left: 0; padding-right: 8px; background: var(--bg); }
 .l-step__meta { display: flex; gap: var(--s-3); font-family: var(--f-mono); font-size: 0.8125rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .l-step__meta span { color: var(--fg); }
@@ -648,8 +665,38 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
 }
 @media (min-width: 1024px) {
   .l-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 0; }
-  .l-step { padding-right: var(--s-8); }
+  .l-step { padding-right: var(--s-8); --step-at: calc(var(--i, 0) * 10%); --step-w: 10%; }
 }
+/* Al entrar cada paso aparece su forma y la línea se traza desde ella. Va
+   atado al scroll (sin JS); donde no hay scroll-driven animations la línea
+   queda dibujada como siempre. En escritorio, los 4 pasos están en una fila:
+   --i escalona el rango para que la línea cruce de izquierda a derecha. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .l-step { border-top-color: transparent; }
+    .l-step::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--fg);
+      transform-origin: left;
+      animation: l-line linear both;
+      animation-timeline: view();
+      animation-range: cover calc(5% + var(--step-at)) cover calc(5% + var(--step-at) + var(--step-w));
+    }
+    .l-step__node {
+      z-index: 1;
+      animation: l-node var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: cover var(--step-at) cover calc(5% + var(--step-at));
+    }
+  }
+}
+@keyframes l-line { from { scale: 0 1; } }
+@keyframes l-node { from { opacity: 0; scale: 0.4; } }
 
 /* ── Trabajo ─────────────────────────────────────────────────────── */
 .l-work { display: flex; flex-direction: column; gap: var(--s-16); }
