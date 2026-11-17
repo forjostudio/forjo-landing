@@ -814,7 +814,10 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
   align-items: flex-end;
   min-height: 420px;
   padding: var(--s-6);
+  /* clip y no hidden: hidden lo vuelve contenedor de scroll y las animaciones
+     ligadas al scroll de adentro (título, círculo) medirían contra él. */
   overflow: hidden;
+  overflow: clip;
   background: var(--naranja);
   color: var(--tinta);
 }
@@ -983,3 +986,38 @@ div:where(.site) footer { display: block; padding: 0; border: 0; background: non
     transition-duration: 1ms !important;
   }
 }
+
+/* Al scrollear, el lenguaje del hero sigue más abajo. Atado al scroll (sin
+   JS) y solo con soporte y sin movimiento reducido: la regla de arriba no
+   frena las animaciones ligadas a scroll. Todas terminan donde está el diseño,
+   así que sin soporte se ve igual que siempre.
+   - Títulos de sección: la misma entrada que el titular del hero.
+   - Trabajo: la forma sale de atrás de la captura hacia su esquina.
+   - Contacto: el círculo baja a su lugar, como las formas del hero. */
+.l-proj { --shape-from: -45% -45%; }
+@media (min-width: 1024px) {
+  .l-proj--flip { --shape-from: 45% -45%; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .l-sec__title,
+    .l-about__title,
+    .l-contact__title {
+      animation: l-title-in var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 35%;
+    }
+    .l-proj__shape {
+      animation: l-shape-out var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 40% cover 50%;
+    }
+    .l-contact__ci {
+      animation: l-ci-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 50%;
+    }
+  }
+}
+@keyframes l-shape-out { from { translate: var(--shape-from); } }
+@keyframes l-ci-in { from { translate: 0 -60%; } }
